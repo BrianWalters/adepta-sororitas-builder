@@ -1,5 +1,8 @@
 export const unitListings = `
 *[_type == "unit"] {
   name,
-  "imageSource": image.asset
+  "abilities": abilities[]->name,
+  power,
+  keywords,
+  "imageAsset": image.asset
 }`;

@@ -2,6 +2,7 @@ import Head from 'next/head';
 import styles from '@/styles/Home.module.css';
 import { cmsProvider } from '@/cms/CmsProvider';
 import { InferGetStaticPropsType } from 'next';
+import { SimpleList } from '@/components/SimpleList';
 
 export default function Home({
   units,
@@ -18,6 +19,9 @@ export default function Home({
             <tr>
               <td></td>
               <th>Name</th>
+              <th>Power</th>
+              <th>Keywords</th>
+              <th>Abilities</th>
             </tr>
           </thead>
           <tbody>
@@ -27,6 +31,15 @@ export default function Home({
                   <img src={unit.imageUrl} alt="" />
                 </td>
                 <td>{unit.name}</td>
+                <td>
+                  <div className="power-badge">{unit.power}</div>
+                </td>
+                <td>
+                  <SimpleList items={unit.keywords} />
+                </td>
+                <td>
+                  <SimpleList items={unit.abilities} />
+                </td>
               </tr>
             ))}
           </tbody>

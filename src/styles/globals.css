@@ -22,3 +22,13 @@ td, th {
   border: 2px groove #ddd;
   padding: 0.5rem;
 }
+
+.power-badge {
+  background-color: palegoldenrod;
+  border-radius: 33%;
+  font-family: monospace;
+  font-size: 2rem;
+  line-height: 2rem;
+  text-align: center;
+  width: 2rem;
+}

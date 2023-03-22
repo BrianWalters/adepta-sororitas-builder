@@ -1,5 +1,5 @@
 import { CmsProviderInterface } from '@/cms/CmsProviderInterface';
-import { UnitListing } from '@/domain/UnitListing';
+import { UnitListing, UnitListingSchema } from '@/domain/UnitListing';
 import { createClient, SanityClient } from '@sanity/client';
 import { unitListings } from '@/cms/sanity/query/unitListings';
 import imageUrlBuilder from '@sanity/image-url';
@@ -22,13 +22,12 @@ export class SanityCmsProvider implements CmsProviderInterface {
     const units = await this.client.fetch(unitListings);
 
     return units.map((unit: any): UnitListing => {
-      return {
-        name: unit?.name,
-        imageUrl: this.imageUrlBuilder
-          .image(unit?.imageSource)
-          .width(100)
-          .url(),
-      };
+      const { imageAsset, ...rest } = unit;
+
+      return UnitListingSchema.parse({
+        ...rest,
+        imageUrl: this.imageUrlBuilder.image(imageAsset).width(100).url(),
+      });
     });
   }
 }
