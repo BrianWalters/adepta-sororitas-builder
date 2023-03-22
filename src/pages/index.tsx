@@ -13,11 +13,24 @@ export default function Home({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <main>
-        <ul>
-          {units.map((unit) => (
-            <li key={unit.name}>{unit.name}</li>
-          ))}
-        </ul>
+        <table>
+          <thead>
+            <tr>
+              <td></td>
+              <th>Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            {units.map((unit) => (
+              <tr key={unit.name}>
+                <td>
+                  <img src={unit.imageUrl} alt="" />
+                </td>
+                <td>{unit.name}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </main>
     </>
   );
