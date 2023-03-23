@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const UnitListingSchema = z.object({
   name: z.string(),
   abilities: z.array(z.string()),
-  power: z.number(),
+  power: z.number().int(),
   keywords: z.array(z.string()),
   imageUrl: z.string(),
 });

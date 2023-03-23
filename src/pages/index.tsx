@@ -13,7 +13,13 @@ export default function Home({
         <title>Adepta Sororitas</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
-      <main>
+      <main className={styles.main}>
+        <h1>Adepta Sororitas</h1>
+        <p className={styles.armyBuilderLink}>
+          <a href="/builder">Army builder</a>
+        </p>
+        <hr />
+        <h2>Unit summaries</h2>
         <table>
           <thead>
             <tr>
