@@ -10,6 +10,7 @@ export const setAvailableUnits = (
   state: BuilderState,
   action: SetAvailableUnitsAction,
 ): BuilderState => {
+  console.log(action.units);
   return {
     ...state,
     availableUnits: action.units,

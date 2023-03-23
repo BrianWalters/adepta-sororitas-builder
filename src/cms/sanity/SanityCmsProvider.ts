@@ -37,11 +37,31 @@ export class SanityCmsProvider implements CmsProviderInterface {
   async getUnitDetails(): Promise<UnitDetail[]> {
     const units = await this.client.fetch(unitDetails);
     return units.map((unit: any): UnitDetail => {
-      const { imageAsset, ...rest } = unit;
+      const { imageAsset, models, wargearOptions, ...rest } = unit;
 
       return UnitDetailSchema.parse({
         ...rest,
-        imageUrl: this.imageUrlBuilder.image(imageAsset).width(100).url(),
+        imageUrl: this.imageUrlBuilder.image(imageAsset).width(300).url(),
+        models: models.map((modelDetails: any) => {
+          return {
+            ...modelDetails,
+            model: {
+              ...modelDetails.model,
+              imageUrl: this.imageUrlBuilder
+                .image(modelDetails.model.imageAsset)
+                .width(150)
+                .url(),
+            },
+          };
+        }),
+        wargearOptions: wargearOptions.map((wg: any) => {
+          return {
+            ...wg,
+            modelId: wg?.model?._id,
+            wargearRemoved:
+              wg?.wargearRemoved?.map((removed: any) => removed._id) || [],
+          };
+        }),
       });
     });
   }
