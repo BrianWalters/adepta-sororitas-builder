@@ -1,14 +1,17 @@
 import { BuilderState } from '@/reducer/state/BuilderState';
+import { Model } from '@/domain/Model';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface BuilderViewModel {
   totalPower: number;
-  units: {
+  units: Array<{
     id: string;
     name: string;
     imageUrl: string;
     power: number;
     keywords: string[];
-  }[];
+    models: Array<Model & { key: string }>;
+  }>;
 }
 
 function computeTotalPower(
@@ -42,6 +45,39 @@ function computerUnitNumber(
   );
 }
 
+function makeModelsForModelSet(
+  modelSet: BuilderState['availableUnits'][0]['models'][0],
+): BuilderViewModel['units'][0]['models'] {
+  const models: BuilderViewModel['units'][0]['models'] = [];
+
+  for (let i = 0; i < modelSet.count; ++i) {
+    models.push({
+      ...modelSet.model,
+      key: uuidv4(),
+    });
+  }
+
+  return models;
+}
+
+function computeModels(
+  baseUnit: BuilderState['availableUnits'][0],
+  selectedUnit: BuilderState['selectedUnits'][0],
+) {
+  return baseUnit.models.reduce<BuilderViewModel['units'][0]['models']>(
+    (carry, next) => {
+      if (
+        next.additionalPowerCost === 0 ||
+        selectedUnit.addedModels.includes(next.id)
+      ) {
+        return [...carry, ...makeModelsForModelSet(next)];
+      }
+      return carry;
+    },
+    [],
+  );
+}
+
 function computeUnits(state: BuilderState): BuilderViewModel['units'] {
   return state.selectedUnits
     .filter((selectedUnit) =>
@@ -58,6 +94,7 @@ function computeUnits(state: BuilderState): BuilderViewModel['units'] {
         imageUrl: baseUnit.imageUrl,
         keywords: baseUnit.keywords,
         power: computeTotalPower(state.availableUnits, [selectedUnit]),
+        models: computeModels(baseUnit, selectedUnit),
       };
     });
 }

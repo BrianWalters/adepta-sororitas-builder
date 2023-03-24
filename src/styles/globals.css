@@ -52,6 +52,14 @@ button, select {
   font-size: 2rem;
 }
 
+.text-right {
+  text-align: right;
+}
+
+.text-center {
+  text-align: center;
+}
+
 .power-badge {
   background-color: palegoldenrod;
   border-radius: 0.75rem;

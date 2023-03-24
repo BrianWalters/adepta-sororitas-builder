@@ -5,6 +5,7 @@ import { cmsProvider } from '@/cms/CmsProvider';
 import styles from '../styles/Builder.module.css';
 import { makeBuilderViewModel } from '@/reducer/builderViewModel';
 import { SimpleList } from '@/components/SimpleList';
+import { ModelTable } from '@/components/ModelTable';
 
 export default function Builder() {
   const [state, dispatch] = useReducer(builderReducer, makeInitialState());
@@ -60,11 +61,14 @@ export default function Builder() {
               <div className={styles.unitRow}>
                 <img src={unit.imageUrl} alt={unit.name} />
                 <div>
-                  <div className="flex-row">
+                  <div className="flex-row mb">
                     <h2>{unit.name}</h2>
                     <div className="power-badge">{unit.power}</div>
                     <SimpleList items={unit.keywords} />
                   </div>
+                  {unit.models.map((model) => (
+                    <ModelTable key={model.key} model={model} />
+                  ))}
                 </div>
               </div>
             </div>

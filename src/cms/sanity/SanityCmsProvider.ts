@@ -41,7 +41,7 @@ export class SanityCmsProvider implements CmsProviderInterface {
 
       return UnitDetailSchema.parse({
         ...rest,
-        imageUrl: this.imageUrlBuilder.image(imageAsset).width(300).url(),
+        imageUrl: this.imageUrlBuilder.image(imageAsset).width(250).url(),
         models: models.map((modelDetails: any) => {
           return {
             ...modelDetails,
@@ -49,7 +49,9 @@ export class SanityCmsProvider implements CmsProviderInterface {
               ...modelDetails.model,
               imageUrl: this.imageUrlBuilder
                 .image(modelDetails.model.imageAsset)
-                .width(150)
+                .width(90)
+                .height(90)
+                .fit('crop')
                 .url(),
             },
           };

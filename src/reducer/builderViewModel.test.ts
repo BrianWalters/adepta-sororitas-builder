@@ -180,4 +180,79 @@ describe('Builder view model', () => {
     expect(viewModel.units[2].name).toEqual('Unit #1');
     expect(viewModel.units[3].name).toEqual('Unit #2');
   });
+
+  it('should include the intrinsic models for each unit', () => {
+    const state: BuilderState = {
+      availableUnits: [makeTestUnit()],
+      selectedUnits: [
+        {
+          id: '1',
+          baseUnitId: 'unit-1',
+          addedModels: [],
+          addedWargearChoices: [],
+        },
+      ],
+    };
+
+    const viewModel = makeBuilderViewModel(state);
+
+    expect(viewModel.units[0].models).toHaveLength(4);
+    expect(viewModel.units[0].models[0]._id).toEqual('model-1');
+    expect(viewModel.units[0].models[0].key).toBeDefined();
+    expect(viewModel.units[0].models[0].name).toEqual('Model');
+    expect(viewModel.units[0].models[0].imageUrl).toEqual(
+      'https://placehold.co/600x400',
+    );
+    expect(viewModel.units[0].models[0].strength).toEqual(3);
+    expect(viewModel.units[0].models[0].attacks).toEqual(1);
+    expect(viewModel.units[0].models[0].ballisticsSkill).toEqual(3);
+    expect(viewModel.units[0].models[0].leadership).toEqual(7);
+    expect(viewModel.units[0].models[0].save).toEqual(3);
+    expect(viewModel.units[0].models[0].movement).toEqual(6);
+    expect(viewModel.units[0].models[0].toughness).toEqual(3);
+    expect(viewModel.units[0].models[0].weaponsSkill).toEqual(4);
+    expect(viewModel.units[0].models[0].wounds).toEqual(1);
+  });
+
+  it('should include the added models for each unit', () => {
+    const state: BuilderState = {
+      availableUnits: [
+        makeTestUnit({
+          models: [
+            {
+              id: 'model-spec-1',
+              model: makeTestModel(),
+              count: 4,
+              additionalPowerCost: 0,
+            },
+            {
+              id: 'model-spec-2',
+              model: makeTestModel({
+                name: 'Model Superior',
+              }),
+              count: 1,
+              additionalPowerCost: 1,
+            },
+          ],
+        }),
+      ],
+      selectedUnits: [
+        {
+          id: '1',
+          baseUnitId: 'unit-1',
+          addedModels: ['model-spec-2'],
+          addedWargearChoices: [],
+        },
+      ],
+    };
+
+    const viewModel = makeBuilderViewModel(state);
+
+    expect(viewModel.units[0].models).toHaveLength(5);
+    expect(viewModel.units[0].models[0].name).toEqual('Model');
+    expect(viewModel.units[0].models[1].name).toEqual('Model');
+    expect(viewModel.units[0].models[2].name).toEqual('Model');
+    expect(viewModel.units[0].models[3].name).toEqual('Model');
+    expect(viewModel.units[0].models[4].name).toEqual('Model Superior');
+  });
 });
