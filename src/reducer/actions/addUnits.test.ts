@@ -10,27 +10,36 @@ describe('addUnits action', () => {
     };
 
     const newState = addUnit(state, {
-      type: 'AddUnit',
+      type: 'AddUnitAction',
       id: 'unit-1',
     });
 
     expect(newState.selectedUnits).toHaveLength(1);
-    expect(newState.selectedUnits[0]._id).toEqual('unit-1');
-    expect(newState.selectedUnits[0]).not.toBe(newState.availableUnits[0]);
+    expect(newState.selectedUnits[0].baseUnitId).toEqual('unit-1');
+    expect(newState.selectedUnits[0].id).toBeDefined();
+    expect(newState.selectedUnits[0].addedModels).toEqual([]);
+    expect(newState.selectedUnits[0].addedWargearChoices).toEqual([]);
   });
 
   it('should append the unit to the end of the array', () => {
     const state: BuilderState = {
       availableUnits: [makeTestUnit(), makeTestUnit({ _id: 'unit-2' })],
-      selectedUnits: [makeTestUnit()],
+      selectedUnits: [
+        {
+          id: '1234567890',
+          addedWargearChoices: [],
+          baseUnitId: 'unit-1',
+          addedModels: [],
+        },
+      ],
     };
 
     const newState = addUnit(state, {
-      type: 'AddUnit',
+      type: 'AddUnitAction',
       id: 'unit-2',
     });
 
     expect(newState.selectedUnits).toHaveLength(2);
-    expect(newState.selectedUnits[1]._id).toEqual('unit-2');
+    expect(newState.selectedUnits[1].baseUnitId).toEqual('unit-2');
   });
 });

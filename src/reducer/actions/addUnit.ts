@@ -1,4 +1,5 @@
 import { BuilderState } from '@/reducer/state/BuilderState';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface AddUnitAction {
   type: 'AddUnitAction';
@@ -14,6 +15,14 @@ export const addUnit = (
 
   return {
     ...state,
-    selectedUnits: [...state.selectedUnits, JSON.parse(JSON.stringify(unit))],
+    selectedUnits: [
+      ...state.selectedUnits,
+      {
+        baseUnitId: unit._id,
+        id: uuidv4(),
+        addedModels: [],
+        addedWargearChoices: [],
+      },
+    ],
   };
 };

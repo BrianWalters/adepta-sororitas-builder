@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { WeaponSchema } from '@/domain/Weapon';
 import { ModelSchema } from '@/domain/Model';
 import { WargearSchema } from '@/domain/Wargear';
+import { v4 as uuidv4 } from 'uuid';
 
 export const UnitDetailSchema = z.object({
   _id: z.string(),
@@ -18,6 +19,7 @@ export const UnitDetailSchema = z.object({
   defaultWeapons: z.array(WeaponSchema),
   models: z.array(
     z.object({
+      id: z.string().default(uuidv4()),
       count: z.number().int(),
       additionalPowerCost: z.number().int(),
       model: ModelSchema,

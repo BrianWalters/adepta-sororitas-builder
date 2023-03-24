@@ -1,4 +1,23 @@
 import { UnitDetail } from '@/domain/UnitDetail';
+import { Model } from '@/domain/Model';
+
+export const makeTestModel = (partialModel: Partial<Model> = {}) => {
+  return {
+    _id: 'model-1',
+    imageUrl: 'https://placehold.co/600x400',
+    name: 'Model',
+    strength: 3,
+    attacks: 1,
+    ballisticsSkill: 3,
+    leadership: 7,
+    save: 3,
+    movement: 6,
+    toughness: 3,
+    weaponsSkill: 4,
+    wounds: 1,
+    ...partialModel,
+  };
+};
 
 export const makeTestUnit = (
   partialUnit: Partial<UnitDetail> = {},
@@ -27,20 +46,8 @@ export const makeTestUnit = (
     keywords: ['Infantry'],
     models: [
       {
-        model: {
-          _id: 'model-1',
-          imageUrl: 'https://placehold.co/600x400',
-          name: 'Model',
-          strength: 3,
-          attacks: 1,
-          ballisticsSkill: 3,
-          leadership: 7,
-          save: 3,
-          movement: 6,
-          toughness: 3,
-          weaponsSkill: 4,
-          wounds: 1,
-        },
+        id: 'model-spec-1',
+        model: makeTestModel(),
         count: 4,
         additionalPowerCost: 0,
       },
