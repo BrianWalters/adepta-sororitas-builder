@@ -9,6 +9,7 @@ import { ModelTable } from '@/components/ModelTable';
 
 export default function Builder() {
   const [state, dispatch] = useReducer(builderReducer, makeInitialState());
+  console.log(`STATE`, state);
   const unitPickerRef = useRef<HTMLSelectElement>(null);
   const viewModel = makeBuilderViewModel(state);
 
@@ -56,6 +57,12 @@ export default function Builder() {
         </p>
 
         {viewModel.units.map((unit) => {
+          const baseUnit = state.availableUnits.find(
+            (au) => au._id === unit.baseUnitId,
+          );
+          const selectedUnit = state.selectedUnits.find(
+            (su) => su.id === unit.id,
+          );
           return (
             <div key={unit.id}>
               <div className={styles.unitRow}>
@@ -69,6 +76,33 @@ export default function Builder() {
                   {unit.models.map((model) => (
                     <ModelTable key={model.key} model={model} />
                   ))}
+                </div>
+                <div className="flex-stack">
+                  {baseUnit?.models
+                    .filter((modelSet) => modelSet.additionalPowerCost > 0)
+                    .map((modelSet) => {
+                      return (
+                        <label className="flex-row" key={modelSet.id}>
+                          <input
+                            type="checkbox"
+                            defaultChecked={selectedUnit?.addedModels.includes(
+                              modelSet.id,
+                            )}
+                            onChange={(event) =>
+                              dispatch({
+                                type: event.target.checked
+                                  ? 'AddModelsAction'
+                                  : 'RemoveModelsAction',
+                                selectedUnitId: selectedUnit?.id || '',
+                                modelSetId: modelSet.id,
+                              })
+                            }
+                          />
+                          {modelSet.count} {modelSet.model.name} for{' '}
+                          {modelSet.additionalPowerCost} power
+                        </label>
+                      );
+                    })}
                 </div>
               </div>
             </div>

@@ -6,6 +6,7 @@ export interface BuilderViewModel {
   totalPower: number;
   units: Array<{
     id: string;
+    baseUnitId: string;
     name: string;
     imageUrl: string;
     power: number;
@@ -90,6 +91,7 @@ function computeUnits(state: BuilderState): BuilderViewModel['units'] {
 
       return {
         id: selectedUnit.id,
+        baseUnitId: selectedUnit.baseUnitId,
         name: `${baseUnit.name} #${computerUnitNumber(array, selectedUnit)}`,
         imageUrl: baseUnit.imageUrl,
         keywords: baseUnit.keywords,

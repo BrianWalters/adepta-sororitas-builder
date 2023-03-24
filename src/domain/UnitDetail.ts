@@ -19,7 +19,7 @@ export const UnitDetailSchema = z.object({
   defaultWeapons: z.array(WeaponSchema),
   models: z.array(
     z.object({
-      id: z.string().default(uuidv4()),
+      id: z.string().default(() => uuidv4()),
       count: z.number().int(),
       additionalPowerCost: z.number().int(),
       model: ModelSchema,
