@@ -42,17 +42,23 @@ button, select {
 }
 
 .flex-row {
+  align-items: center;
   display: flex;
   flex-direction: row;
   gap: 1rem;
 }
 
+.large-text {
+  font-size: 2rem;
+}
+
 .power-badge {
   background-color: palegoldenrod;
-  border-radius: 33%;
+  border-radius: 0.75rem;
+  display: inline-block;
   font-family: monospace;
   font-size: 2rem;
-  line-height: 2rem;
+  line-height: 2.5rem;
+  padding: 0 0.5rem;
   text-align: center;
-  width: 2rem;
 }

@@ -3,10 +3,13 @@ import { useEffect, useReducer, useRef } from 'react';
 import { builderReducer, makeInitialState } from '@/reducer/builderReducer';
 import { cmsProvider } from '@/cms/CmsProvider';
 import styles from '../styles/Builder.module.css';
+import { makeBuilderViewModel } from '@/reducer/builderViewModel';
+import { SimpleList } from '@/components/SimpleList';
 
 export default function Builder() {
   const [state, dispatch] = useReducer(builderReducer, makeInitialState());
   const unitPickerRef = useRef<HTMLSelectElement>(null);
+  const viewModel = makeBuilderViewModel(state);
 
   useEffect(() => {
     cmsProvider
@@ -46,10 +49,24 @@ export default function Builder() {
 
         <hr />
 
-        {state.selectedUnits.map((unit) => {
+        <p>
+          <span className="large-text">Total power:</span>{' '}
+          <span className="power-badge">{viewModel.totalPower}</span>
+        </p>
+
+        {viewModel.units.map((unit) => {
           return (
-            <div key={unit._id}>
-              <h2>{unit.name}</h2>
+            <div key={unit.id}>
+              <div className={styles.unitRow}>
+                <img src={unit.imageUrl} alt={unit.name} />
+                <div>
+                  <div className="flex-row">
+                    <h2>{unit.name}</h2>
+                    <div className="power-badge">{unit.power}</div>
+                    <SimpleList items={unit.keywords} />
+                  </div>
+                </div>
+              </div>
             </div>
           );
         })}
