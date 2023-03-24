@@ -3,6 +3,7 @@ import styles from '@/styles/Home.module.css';
 import { cmsProvider } from '@/cms/CmsProvider';
 import { InferGetStaticPropsType } from 'next';
 import { SimpleList } from '@/components/SimpleList';
+import Link from 'next/link';
 
 export default function Home({
   units,
@@ -16,7 +17,7 @@ export default function Home({
       <main className={styles.main}>
         <h1>Adepta Sororitas</h1>
         <p className={styles.armyBuilderLink}>
-          <a href="/builder">Army builder</a>
+          <Link href="/builder">Army builder</Link>
         </p>
         <hr />
         <h2>Unit summaries</h2>
