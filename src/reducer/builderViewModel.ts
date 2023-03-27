@@ -1,18 +1,29 @@
-import { BuilderState } from '@/reducer/state/BuilderState';
+import {
+  BuilderState,
+  SelectedUnitState,
+  WargearOptionState,
+} from '@/reducer/state/BuilderState';
 import { Model } from '@/domain/Model';
 import { v4 as uuidv4 } from 'uuid';
+import { Wargear } from '@/domain/Wargear';
+import { Weapon } from '@/domain/Weapon';
+import { UnitDetail } from '@/domain/UnitDetail';
+
+type ModelViewModel = Model & { key: string; wargear: Array<Wargear | Weapon> };
+
+type UnitViewModel = {
+  id: string;
+  baseUnitId: string;
+  name: string;
+  imageUrl: string;
+  power: number;
+  keywords: string[];
+  models: ModelViewModel[];
+};
 
 export interface BuilderViewModel {
   totalPower: number;
-  units: Array<{
-    id: string;
-    baseUnitId: string;
-    name: string;
-    imageUrl: string;
-    power: number;
-    keywords: string[];
-    models: Array<Model & { key: string }>;
-  }>;
+  units: UnitViewModel[];
 }
 
 function computeTotalPower(
@@ -48,6 +59,7 @@ function computerUnitNumber(
 
 function makeModelsForModelSet(
   modelSet: BuilderState['availableUnits'][0]['models'][0],
+  baseUnit: BuilderState['availableUnits'][0],
 ): BuilderViewModel['units'][0]['models'] {
   const models: BuilderViewModel['units'][0]['models'] = [];
 
@@ -55,28 +67,87 @@ function makeModelsForModelSet(
     models.push({
       ...modelSet.model,
       key: uuidv4(),
+      wargear: [...baseUnit.defaultWeapons],
     });
   }
 
   return models;
 }
 
-function computeModels(
-  baseUnit: BuilderState['availableUnits'][0],
-  selectedUnit: BuilderState['selectedUnits'][0],
-) {
-  return baseUnit.models.reduce<BuilderViewModel['units'][0]['models']>(
-    (carry, next) => {
-      if (
-        next.additionalPowerCost === 0 ||
-        selectedUnit.addedModels.includes(next.id)
-      ) {
-        return [...carry, ...makeModelsForModelSet(next)];
+class ModelWargearAdjuster {
+  private wargearOptions: WargearOptionState[];
+
+  constructor(
+    private baseUnit: UnitDetail,
+    private selectedUnit: SelectedUnitState,
+    private models: ModelViewModel[],
+  ) {
+    this.wargearOptions = structuredClone(selectedUnit.wargearOptions);
+  }
+
+  public *makeGenerator(): Generator<ModelViewModel> {
+    for (let i = 0; i < this.models.length; ++i) {
+      const wargearOptionState = this.wargearOptions.find(
+        (wargearOption) => wargearOption.count > 0,
+      );
+      if (!wargearOptionState) {
+        yield this.models[i];
+        continue;
       }
-      return carry;
-    },
-    [],
+      wargearOptionState.count--;
+
+      const wargearOptionDefinition = this.baseUnit.wargearOptions.find(
+        (wargearOption) => wargearOption.id === wargearOptionState.optionId,
+      );
+      if (!wargearOptionDefinition) {
+        yield this.models[i];
+        continue;
+      }
+
+      const wargearRemoved = this.models[i].wargear.filter(
+        (wargear) =>
+          !wargearOptionDefinition.wargearRemoved.includes(wargear._id),
+      );
+
+      const wargearToAdd = wargearOptionDefinition.wargearChoices.find(
+        (choice) => choice.id === wargearOptionState.choiceId,
+      );
+      if (!wargearToAdd) {
+        yield this.models[i];
+        continue;
+      }
+
+      yield {
+        ...this.models[i],
+        wargear: [...wargearRemoved, ...wargearToAdd.wargearAdded],
+      };
+    }
+  }
+}
+
+function makeModelsForUnit(
+  baseUnit: UnitDetail,
+  selectedUnit: SelectedUnitState,
+) {
+  const defaultModelViewModels = baseUnit.models.reduce<
+    BuilderViewModel['units'][0]['models']
+  >((carry, next) => {
+    if (
+      next.additionalPowerCost === 0 ||
+      selectedUnit.addedModels.includes(next.id)
+    ) {
+      return [...carry, ...makeModelsForModelSet(next, baseUnit)];
+    }
+    return carry;
+  }, []);
+
+  const modelWargearAdjuster = new ModelWargearAdjuster(
+    baseUnit,
+    selectedUnit,
+    defaultModelViewModels,
   );
+
+  return Array.from(modelWargearAdjuster.makeGenerator());
 }
 
 function computeUnits(state: BuilderState): BuilderViewModel['units'] {
@@ -96,7 +167,7 @@ function computeUnits(state: BuilderState): BuilderViewModel['units'] {
         imageUrl: baseUnit.imageUrl,
         keywords: baseUnit.keywords,
         power: computeTotalPower(state.availableUnits, [selectedUnit]),
-        models: computeModels(baseUnit, selectedUnit),
+        models: makeModelsForUnit(baseUnit, selectedUnit),
       };
     });
 }

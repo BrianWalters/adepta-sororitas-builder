@@ -255,4 +255,51 @@ describe('Builder view model', () => {
     expect(viewModel.units[0].models[3].name).toEqual('Model');
     expect(viewModel.units[0].models[4].name).toEqual('Model Superior');
   });
+
+  it('should show the default weapons if there are no wargear options set', () => {
+    const state: BuilderState = {
+      availableUnits: [makeTestUnit()],
+      selectedUnits: [
+        {
+          id: 'selected-unit-1',
+          wargearOptions: [],
+          baseUnitId: 'unit-1',
+          addedModels: [],
+        },
+      ],
+    };
+
+    const viewModel = makeBuilderViewModel(state);
+
+    expect(viewModel.units[0].models[0].wargear).toHaveLength(1);
+    expect(viewModel.units[0].models[0].wargear[0]._id).toEqual('weapon-1');
+    expect(viewModel.units[0].models[0].wargear[0].name).toEqual('Weapon');
+  });
+
+  it('should adjust the wargear if any wargear options have been set', () => {
+    const state: BuilderState = {
+      availableUnits: [makeTestUnit()],
+      selectedUnits: [
+        {
+          id: 'selected-unit-1',
+          wargearOptions: [
+            {
+              optionId: 'wargear-option-1',
+              choiceId: 'wargear-choice-1',
+              count: 2,
+            },
+          ],
+          baseUnitId: 'unit-1',
+          addedModels: [],
+        },
+      ],
+    };
+
+    const viewModel = makeBuilderViewModel(state);
+
+    expect(viewModel.units[0].models[0].wargear[0]._id).toEqual('wargear-1');
+    expect(viewModel.units[0].models[1].wargear[0]._id).toEqual('wargear-1');
+    expect(viewModel.units[0].models[2].wargear[0]._id).toEqual('weapon-1');
+    expect(viewModel.units[0].models[3].wargear[0]._id).toEqual('weapon-1');
+  });
 });
