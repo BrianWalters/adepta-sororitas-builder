@@ -11,7 +11,7 @@ describe('Builder view model', () => {
           id: '1234567890',
           baseUnitId: 'unit-1',
           addedModels: [],
-          addedWargearChoices: [],
+          wargearOptions: [],
         },
       ],
     };
@@ -52,7 +52,7 @@ describe('Builder view model', () => {
           id: '1234567890',
           baseUnitId: 'unit-1',
           addedModels: ['model-spec-2', 'model-spec-3'],
-          addedWargearChoices: [],
+          wargearOptions: [],
         },
       ],
     };
@@ -87,7 +87,7 @@ describe('Builder view model', () => {
           id: '1234567890',
           baseUnitId: 'unit-1',
           addedModels: ['model-spec-2'],
-          addedWargearChoices: [],
+          wargearOptions: [],
         },
       ],
     };
@@ -110,19 +110,19 @@ describe('Builder view model', () => {
           id: '1',
           baseUnitId: 'unit-1',
           addedModels: [],
-          addedWargearChoices: [],
+          wargearOptions: [],
         },
         {
           id: '2',
           baseUnitId: 'unit-1',
           addedModels: [],
-          addedWargearChoices: [],
+          wargearOptions: [],
         },
         {
           id: '3',
           baseUnitId: 'unit-1',
           addedModels: [],
-          addedWargearChoices: [],
+          wargearOptions: [],
         },
       ],
     };
@@ -149,25 +149,25 @@ describe('Builder view model', () => {
           id: '1',
           baseUnitId: 'unit-1',
           addedModels: [],
-          addedWargearChoices: [],
+          wargearOptions: [],
         },
         {
           id: '2',
           baseUnitId: 'unit-2',
           addedModels: [],
-          addedWargearChoices: [],
+          wargearOptions: [],
         },
         {
           id: '3',
           baseUnitId: 'unit-2',
           addedModels: [],
-          addedWargearChoices: [],
+          wargearOptions: [],
         },
         {
           id: '4',
           baseUnitId: 'unit-1',
           addedModels: [],
-          addedWargearChoices: [],
+          wargearOptions: [],
         },
       ],
     };
@@ -189,7 +189,7 @@ describe('Builder view model', () => {
           id: '1',
           baseUnitId: 'unit-1',
           addedModels: [],
-          addedWargearChoices: [],
+          wargearOptions: [],
         },
       ],
     };
@@ -241,7 +241,7 @@ describe('Builder view model', () => {
           id: '1',
           baseUnitId: 'unit-1',
           addedModels: ['model-spec-2'],
-          addedWargearChoices: [],
+          wargearOptions: [],
         },
       ],
     };

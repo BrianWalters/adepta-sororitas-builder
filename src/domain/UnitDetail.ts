@@ -27,11 +27,13 @@ export const UnitDetailSchema = z.object({
   ),
   wargearOptions: z.array(
     z.object({
+      id: z.string().default(() => uuidv4()),
       limit: z.number().int(),
       modelId: z.string().nullish(),
       wargearRemoved: z.array(z.string()).default([]),
       wargearChoices: z.array(
         z.object({
+          id: z.string().default(() => uuidv4()),
           wargearAdded: z.array(z.union([WeaponSchema, WargearSchema])),
         }),
       ),

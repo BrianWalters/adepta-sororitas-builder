@@ -4,7 +4,11 @@ interface SelectedUnit {
   id: string;
   baseUnitId: string;
   addedModels: string[];
-  addedWargearChoices: string[];
+  wargearOptions: {
+    optionId: string;
+    choiceId: string;
+    count: number;
+  }[];
 }
 
 export interface BuilderState {

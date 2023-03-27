@@ -19,6 +19,30 @@ export const makeTestModel = (partialModel: Partial<Model> = {}) => {
   };
 };
 
+export const makeTestWargearOption = (
+  partialWargearOption: Partial<UnitDetail['wargearOptions'][0]> = {},
+) => {
+  return {
+    id: 'wargear-option-1',
+    limit: 1,
+    modelId: 'model-1',
+    wargearRemoved: ['weapon-1'],
+    wargearChoices: [
+      {
+        id: 'wargear-choice-1',
+        wargearAdded: [
+          {
+            _id: 'wargear-1',
+            name: 'Wargear',
+            abilities: [],
+          },
+        ],
+      },
+    ],
+    ...partialWargearOption,
+  };
+};
+
 export const makeTestUnit = (
   partialUnit: Partial<UnitDetail> = {},
 ): UnitDetail => {
@@ -53,24 +77,7 @@ export const makeTestUnit = (
       },
     ],
     power: 4,
-    wargearOptions: [
-      {
-        limit: 1,
-        modelId: 'model-1',
-        wargearRemoved: ['weapon-1'],
-        wargearChoices: [
-          {
-            wargearAdded: [
-              {
-                _id: 'wargear-1',
-                name: 'Wargear',
-                abilities: [],
-              },
-            ],
-          },
-        ],
-      },
-    ],
+    wargearOptions: [makeTestWargearOption()],
     ...partialUnit,
   };
 };

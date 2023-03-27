@@ -18,7 +18,7 @@ describe('addUnits action', () => {
     expect(newState.selectedUnits[0].baseUnitId).toEqual('unit-1');
     expect(newState.selectedUnits[0].id).toBeDefined();
     expect(newState.selectedUnits[0].addedModels).toEqual([]);
-    expect(newState.selectedUnits[0].addedWargearChoices).toEqual([]);
+    expect(newState.selectedUnits[0].wargearOptions).toEqual([]);
   });
 
   it('should append the unit to the end of the array', () => {
@@ -27,7 +27,7 @@ describe('addUnits action', () => {
       selectedUnits: [
         {
           id: '1234567890',
-          addedWargearChoices: [],
+          wargearOptions: [],
           baseUnitId: 'unit-1',
           addedModels: [],
         },

@@ -21,7 +21,7 @@ export const addUnit = (
         baseUnitId: unit._id,
         id: uuidv4(),
         addedModels: [],
-        addedWargearChoices: [],
+        wargearOptions: [],
       },
     ],
   };

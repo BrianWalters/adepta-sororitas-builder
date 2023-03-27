@@ -106,7 +106,7 @@ describe('addModels action', () => {
       selectedUnits: [
         {
           id: '1234567890',
-          addedWargearChoices: [],
+          wargearOptions: [],
           baseUnitId: 'unit-1',
           addedModels: ['model-spec-2'],
         },
@@ -151,7 +151,7 @@ describe('addModels action', () => {
       selectedUnits: [
         {
           id: '1234567890',
-          addedWargearChoices: [],
+          wargearOptions: [],
           baseUnitId: 'unit-1',
           addedModels: ['model-spec-2'],
         },
