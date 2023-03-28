@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import { WeaponSchema } from '@/domain/Weapon';
 import { ModelSchema } from '@/domain/Model';
-import { WargearSchema } from '@/domain/Wargear';
 import { v4 as uuidv4 } from 'uuid';
+import { WargearOptionSchema } from '@/domain/WargearOption';
 
 export const UnitDetailSchema = z.object({
   _id: z.string(),
@@ -25,20 +25,7 @@ export const UnitDetailSchema = z.object({
       model: ModelSchema,
     }),
   ),
-  wargearOptions: z.array(
-    z.object({
-      id: z.string().default(() => uuidv4()),
-      limit: z.number().int(),
-      modelId: z.string().nullish(),
-      wargearRemoved: z.array(z.string()).default([]),
-      wargearChoices: z.array(
-        z.object({
-          id: z.string().default(() => uuidv4()),
-          wargearAdded: z.array(z.union([WeaponSchema, WargearSchema])),
-        }),
-      ),
-    }),
-  ),
+  wargearOptions: z.array(WargearOptionSchema),
 });
 
 export type UnitDetail = z.infer<typeof UnitDetailSchema>;

@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Wargear } from '@/domain/Wargear';
 import { Weapon } from '@/domain/Weapon';
 import { UnitDetail } from '@/domain/UnitDetail';
+import { WargearOption } from '@/domain/WargearOption';
 
 type ModelViewModel = Model & {
   key: string;
@@ -106,15 +107,30 @@ class ModelWargearAdjuster {
         yield this.models[i];
         continue;
       }
-      wargearOptionState.count--;
 
       const wargearOptionDefinition =
         this.wargearDefinitions[wargearOptionState.optionId];
 
-      const wargearRemoved = this.models[i].wargear.filter(
-        (wargear) =>
-          !wargearOptionDefinition.wargearRemoved.includes(wargear._id),
-      );
+      if (
+        this.doesModelHaveValidWargearToRemoveForOption(
+          wargearOptionDefinition,
+          i,
+        )
+      ) {
+        yield this.models[i];
+        continue;
+      }
+
+      wargearOptionState.count--;
+
+      wargearOptionDefinition.wargearRemoved.forEach((wargearIdToRemove) => {
+        this.models[i].wargear.splice(
+          this.models[i].wargear.findIndex(
+            (wg) => wg._id === wargearIdToRemove,
+          ),
+          1,
+        );
+      });
 
       const wargearToAdd = wargearOptionDefinition.wargearChoices.find(
         (choice) => choice.id === wargearOptionState.choiceId,
@@ -126,9 +142,18 @@ class ModelWargearAdjuster {
 
       yield {
         ...this.models[i],
-        wargear: [...wargearRemoved, ...wargearToAdd.wargearAdded],
+        wargear: [...this.models[i].wargear, ...wargearToAdd.wargearAdded],
       };
     }
+  }
+
+  private doesModelHaveValidWargearToRemoveForOption(
+    wargearOptionDefinition: WargearOption,
+    modelIndex: number,
+  ) {
+    return !wargearOptionDefinition.wargearRemoved.every((wargearId) =>
+      this.models[modelIndex].wargear.find((wg) => wg._id === wargearId),
+    );
   }
 }
 
