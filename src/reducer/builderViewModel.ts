@@ -75,20 +75,29 @@ function makeModelsForModelSet(
 }
 
 class ModelWargearAdjuster {
-  private wargearOptions: WargearOptionState[];
+  private wargearOptionSelections: WargearOptionState[];
+  private wargearDefinitions: {
+    [key: string]: UnitDetail['wargearOptions'][0];
+  } = {};
 
   constructor(
     private baseUnit: UnitDetail,
     private selectedUnit: SelectedUnitState,
     private models: ModelViewModel[],
   ) {
-    this.wargearOptions = structuredClone(selectedUnit.wargearOptions);
+    this.wargearOptionSelections = structuredClone(selectedUnit.wargearOptions);
+    baseUnit.wargearOptions.forEach((wargearOption) => {
+      this.wargearDefinitions[wargearOption.id] = wargearOption;
+    });
   }
 
   public *makeGenerator(): Generator<ModelViewModel> {
     for (let i = 0; i < this.models.length; ++i) {
-      const wargearOptionState = this.wargearOptions.find(
-        (wargearOption) => wargearOption.count > 0,
+      const wargearOptionState = this.wargearOptionSelections.find(
+        (wargearOption) =>
+          wargearOption.count > 0 &&
+          this.wargearDefinitions[wargearOption.optionId].modelId ===
+            this.models[i]._id,
       );
       if (!wargearOptionState) {
         yield this.models[i];
@@ -96,13 +105,8 @@ class ModelWargearAdjuster {
       }
       wargearOptionState.count--;
 
-      const wargearOptionDefinition = this.baseUnit.wargearOptions.find(
-        (wargearOption) => wargearOption.id === wargearOptionState.optionId,
-      );
-      if (!wargearOptionDefinition) {
-        yield this.models[i];
-        continue;
-      }
+      const wargearOptionDefinition =
+        this.wargearDefinitions[wargearOptionState.optionId];
 
       const wargearRemoved = this.models[i].wargear.filter(
         (wargear) =>

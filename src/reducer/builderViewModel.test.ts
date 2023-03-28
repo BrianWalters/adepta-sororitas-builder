@@ -1,5 +1,9 @@
 import { BuilderState } from '@/reducer/state/BuilderState';
-import { makeTestModel, makeTestUnit } from '@/testHelpers';
+import {
+  makeTestModel,
+  makeTestUnit,
+  makeTestWargearOption,
+} from '@/testHelpers';
 import { makeBuilderViewModel } from '@/reducer/builderViewModel';
 
 describe('Builder view model', () => {
@@ -301,5 +305,83 @@ describe('Builder view model', () => {
     expect(viewModel.units[0].models[1].wargear[0]._id).toEqual('wargear-1');
     expect(viewModel.units[0].models[2].wargear[0]._id).toEqual('weapon-1');
     expect(viewModel.units[0].models[3].wargear[0]._id).toEqual('weapon-1');
+  });
+
+  it('should only apply the wargear option to the matching model', () => {
+    const state: BuilderState = {
+      availableUnits: [
+        makeTestUnit({
+          models: [
+            {
+              id: 'model-spec-1',
+              model: makeTestModel(),
+              count: 4,
+              additionalPowerCost: 0,
+            },
+            {
+              id: 'model-spec-2',
+              model: makeTestModel({
+                _id: 'model-2',
+                name: 'Other model',
+              }),
+              count: 1,
+              additionalPowerCost: 2,
+            },
+          ],
+          wargearOptions: [
+            makeTestWargearOption(),
+            makeTestWargearOption({
+              id: 'wargear-option-2',
+              limit: 1,
+              modelId: 'model-2',
+              wargearChoices: [
+                {
+                  id: 'wargear-choice-2',
+                  wargearAdded: [
+                    {
+                      _id: 'weapon-2',
+                      name: 'Weapon',
+                      type: 'Assault 2',
+                      armorPiercing: -1,
+                      damage: '1',
+                      range: 12,
+                      strength: '6',
+                    },
+                  ],
+                },
+              ],
+            }),
+          ],
+        }),
+      ],
+      selectedUnits: [
+        {
+          id: 'selected-unit-1',
+          wargearOptions: [
+            {
+              optionId: 'wargear-option-1',
+              choiceId: 'wargear-choice-1',
+              count: 2,
+            },
+            {
+              optionId: 'wargear-option-2',
+              choiceId: 'wargear-choice-2',
+              count: 1,
+            },
+          ],
+          baseUnitId: 'unit-1',
+          addedModels: ['model-spec-2'],
+        },
+      ],
+    };
+
+    const viewModel = makeBuilderViewModel(state);
+
+    expect(viewModel.units[0].models).toHaveLength(5);
+    expect(viewModel.units[0].models[0].wargear[0]._id).toEqual('wargear-1');
+    expect(viewModel.units[0].models[1].wargear[0]._id).toEqual('wargear-1');
+    expect(viewModel.units[0].models[2].wargear[0]._id).toEqual('weapon-1');
+    expect(viewModel.units[0].models[3].wargear[0]._id).toEqual('weapon-1');
+    expect(viewModel.units[0].models[4].wargear[0]._id).toEqual('weapon-2');
   });
 });
