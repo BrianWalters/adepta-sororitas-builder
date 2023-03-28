@@ -33,6 +33,7 @@ export const makeTestWargearOption = (
         wargearAdded: [
           {
             _id: 'wargear-1',
+            key: 'wargear-key-1',
             name: 'Wargear',
             abilities: [],
           },
@@ -59,6 +60,7 @@ export const makeTestUnit = (
     defaultWeapons: [
       {
         _id: 'weapon-1',
+        key: '123',
         name: 'Weapon',
         type: 'Rapid Fire 1',
         armorPiercing: 0,

@@ -9,7 +9,6 @@ import { ModelTable } from '@/components/ModelTable';
 
 export default function Builder() {
   const [state, dispatch] = useReducer(builderReducer, makeInitialState());
-  console.log(`STATE`, state);
   const unitPickerRef = useRef<HTMLSelectElement>(null);
   const viewModel = makeBuilderViewModel(state);
 
@@ -103,6 +102,41 @@ export default function Builder() {
                         </label>
                       );
                     })}
+                  {baseUnit?.wargearOptions.map((wargearOption) => {
+                    const model = baseUnit.models.find(
+                      (modelSet) =>
+                        modelSet.model._id === wargearOption.modelId,
+                    );
+                    return (
+                      <div key={wargearOption.id}>
+                        Equip
+                        <input
+                          type="number"
+                          max={wargearOption.limit}
+                          min={0}
+                          size={2}
+                          defaultValue={
+                            selectedUnit?.wargearOptions.find(
+                              (option) => option.optionId === wargearOption.id,
+                            )?.count || 0
+                          }
+                        />
+                        {model?.model.name}
+                        with
+                        <select>
+                          {wargearOption.wargearChoices.map((choice) => {
+                            return (
+                              <option key={choice.id}>
+                                {choice.wargearAdded
+                                  .map((wg) => wg.name)
+                                  .join(', ')}
+                              </option>
+                            );
+                          })}
+                        </select>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>

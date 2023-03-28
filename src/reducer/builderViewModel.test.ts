@@ -340,6 +340,7 @@ describe('Builder view model', () => {
                   wargearAdded: [
                     {
                       _id: 'weapon-2',
+                      key: 'key-1',
                       name: 'Weapon',
                       type: 'Assault 2',
                       armorPiercing: -1,
