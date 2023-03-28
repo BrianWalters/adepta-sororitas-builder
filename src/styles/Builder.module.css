@@ -9,3 +9,9 @@
   gap: 1rem;
   grid-template-columns: auto 1fr auto;
 }
+
+.modelStack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}

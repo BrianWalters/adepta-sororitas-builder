@@ -67,8 +67,8 @@ export default function Builder() {
             <div key={unit.id}>
               <div className={styles.unitRow}>
                 <img src={unit.imageUrl} alt={unit.name} />
-                <div>
-                  <div className="flex-row mb">
+                <div className={styles.modelStack}>
+                  <div className="flex-row">
                     <h2>{unit.name}</h2>
                     <div className="power-badge">{unit.power}</div>
                     <SimpleList items={unit.keywords} />

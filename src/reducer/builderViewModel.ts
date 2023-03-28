@@ -9,7 +9,10 @@ import { Wargear } from '@/domain/Wargear';
 import { Weapon } from '@/domain/Weapon';
 import { UnitDetail } from '@/domain/UnitDetail';
 
-type ModelViewModel = Model & { key: string; wargear: Array<Wargear | Weapon> };
+type ModelViewModel = Model & {
+  key: string;
+  wargear: Array<Wargear | Weapon>;
+};
 
 type UnitViewModel = {
   id: string;
