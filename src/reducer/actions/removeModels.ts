@@ -6,7 +6,7 @@ export interface RemoveModelsAction {
   modelSetId: string;
 }
 
-export const RemoveModels = (
+export const removeModels = (
   state: BuilderState,
   action: RemoveModelsAction,
 ): BuilderState => {

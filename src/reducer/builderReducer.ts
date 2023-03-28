@@ -6,9 +6,13 @@ import {
 import { addUnit, AddUnitAction } from '@/reducer/actions/addUnit';
 import { addModels, AddModelsAction } from '@/reducer/actions/addModels';
 import {
-  RemoveModels,
+  removeModels,
   RemoveModelsAction,
 } from '@/reducer/actions/removeModels';
+import {
+  setWargearOption,
+  SetWargearOptionAction,
+} from '@/reducer/actions/setWargearOption';
 
 export const makeInitialState = (): BuilderState => {
   return {
@@ -21,7 +25,8 @@ type BuilderAction =
   | SetAvailableUnitsAction
   | AddUnitAction
   | AddModelsAction
-  | RemoveModelsAction;
+  | RemoveModelsAction
+  | SetWargearOptionAction;
 
 export const builderReducer = (state: BuilderState, action: BuilderAction) => {
   switch (action.type) {
@@ -32,7 +37,9 @@ export const builderReducer = (state: BuilderState, action: BuilderAction) => {
     case 'AddModelsAction':
       return addModels(state, action);
     case 'RemoveModelsAction':
-      return RemoveModels(state, action);
+      return removeModels(state, action);
+    case 'SetWargearOptionAction':
+      return setWargearOption(state, action);
   }
 
   return state;

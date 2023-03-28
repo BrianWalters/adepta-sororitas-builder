@@ -47,6 +47,7 @@ describe('setWargearOption action', () => {
                   wargearAdded: [
                     {
                       _id: 'wargear-1',
+                      key: 'wargear-key-1',
                       name: 'Wargear',
                       abilities: [],
                     },
@@ -65,6 +66,7 @@ describe('setWargearOption action', () => {
                   wargearAdded: [
                     {
                       _id: 'weapon-2',
+                      key: 'weapon-key-2',
                       name: 'Weapon',
                       type: 'Assault 2',
                       armorPiercing: -1,
@@ -158,6 +160,7 @@ describe('setWargearOption action', () => {
                   wargearAdded: [
                     {
                       _id: 'wargear-1',
+                      key: 'wargear-key-1',
                       name: 'Wargear',
                       abilities: [],
                     },
@@ -168,6 +171,7 @@ describe('setWargearOption action', () => {
                   wargearAdded: [
                     {
                       _id: 'weapon-2',
+                      key: 'wargear-key-2',
                       name: 'Weapon',
                       type: 'Assault 2',
                       armorPiercing: -1,
@@ -214,7 +218,7 @@ describe('setWargearOption action', () => {
     });
   });
 
-  it('should remove the option if setting to a count of 0', () => {
+  it('should keep the option if setting to a count of 0', () => {
     const state: BuilderState = {
       availableUnits: [
         makeTestUnit({
@@ -230,6 +234,7 @@ describe('setWargearOption action', () => {
                   wargearAdded: [
                     {
                       _id: 'wargear-1',
+                      key: 'wargear-key-1',
                       name: 'Wargear',
                       abilities: [],
                     },
@@ -240,6 +245,7 @@ describe('setWargearOption action', () => {
                   wargearAdded: [
                     {
                       _id: 'weapon-2',
+                      key: 'weapon-key-2',
                       name: 'Weapon',
                       type: 'Assault 2',
                       armorPiercing: -1,
@@ -278,6 +284,173 @@ describe('setWargearOption action', () => {
       count: 0,
     });
 
-    expect(newState.selectedUnits[0].wargearOptions).toHaveLength(0);
+    expect(newState.selectedUnits[0].wargearOptions).toHaveLength(1);
+    expect(newState.selectedUnits[0].wargearOptions[0]).toEqual({
+      optionId: 'wargear-option-1',
+      choiceId: 'wargear-choice-1',
+      count: 0,
+    });
+  });
+
+  it('should not change the existing count if set without one', () => {
+    const state: BuilderState = {
+      availableUnits: [
+        makeTestUnit({
+          wargearOptions: [
+            makeTestWargearOption({
+              limit: 3,
+              wargearChoices: [
+                {
+                  id: 'wargear-choice-1',
+                  wargearAdded: [
+                    {
+                      _id: 'wargear-1',
+                      key: 'wargear-key-1',
+                      name: 'Wargear',
+                      abilities: [],
+                    },
+                  ],
+                },
+                {
+                  id: 'wargear-choice-2',
+                  wargearAdded: [
+                    {
+                      _id: 'weapon-2',
+                      key: 'weapon-key-2',
+                      name: 'Weapon',
+                      type: 'Assault 2',
+                      armorPiercing: -1,
+                      damage: '1',
+                      range: 12,
+                      strength: '6',
+                    },
+                  ],
+                },
+              ],
+            }),
+          ],
+        }),
+      ],
+      selectedUnits: [
+        {
+          id: 'selected-unit-1',
+          wargearOptions: [
+            {
+              optionId: 'wargear-option-1',
+              choiceId: 'wargear-choice-1',
+              count: 3,
+            },
+          ],
+          baseUnitId: 'unit-1',
+          addedModels: [],
+        },
+      ],
+    };
+
+    const state1 = setWargearOption(state, {
+      type: 'SetWargearOptionAction',
+      selectedUnitId: 'selected-unit-1',
+      wargearOptionId: 'wargear-option-1',
+      wargearChoiceId: 'wargear-choice-2',
+    });
+
+    expect(state1.selectedUnits[0].wargearOptions[0].count).toEqual(3);
+  });
+
+  it('should use the first choice if setting an option without one', () => {
+    const state: BuilderState = {
+      availableUnits: [makeTestUnit()],
+      selectedUnits: [
+        {
+          id: 'selected-unit-1',
+          wargearOptions: [],
+          baseUnitId: 'unit-1',
+          addedModels: [],
+        },
+      ],
+    };
+
+    const newState = setWargearOption(state, {
+      type: 'SetWargearOptionAction',
+      selectedUnitId: 'selected-unit-1',
+      wargearOptionId: 'wargear-option-1',
+    });
+
+    expect(newState.selectedUnits[0].wargearOptions).toHaveLength(1);
+    expect(newState.selectedUnits[0].wargearOptions[0]).toEqual({
+      optionId: 'wargear-option-1',
+      choiceId: 'wargear-choice-1',
+      count: 1,
+    });
+  });
+
+  it('should be able to update the count of an existing option if no new choice is set', () => {
+    const state: BuilderState = {
+      availableUnits: [
+        makeTestUnit({
+          wargearOptions: [
+            makeTestWargearOption({
+              limit: 3,
+              wargearChoices: [
+                {
+                  id: 'wargear-choice-1',
+                  wargearAdded: [
+                    {
+                      _id: 'wargear-1',
+                      key: 'wargear-key-1',
+                      name: 'Wargear',
+                      abilities: [],
+                    },
+                  ],
+                },
+                {
+                  id: 'wargear-choice-2',
+                  wargearAdded: [
+                    {
+                      _id: 'weapon-2',
+                      key: 'weapon-key-2',
+                      name: 'Weapon',
+                      type: 'Assault 2',
+                      armorPiercing: -1,
+                      damage: '1',
+                      range: 12,
+                      strength: '6',
+                    },
+                  ],
+                },
+              ],
+            }),
+          ],
+        }),
+      ],
+      selectedUnits: [
+        {
+          id: 'selected-unit-1',
+          wargearOptions: [
+            {
+              optionId: 'wargear-option-1',
+              choiceId: 'wargear-choice-2',
+              count: 1,
+            },
+          ],
+          baseUnitId: 'unit-1',
+          addedModels: [],
+        },
+      ],
+    };
+
+    const newState = setWargearOption(state, {
+      type: 'SetWargearOptionAction',
+      selectedUnitId: 'selected-unit-1',
+      wargearOptionId: 'wargear-option-1',
+      count: 3,
+    });
+
+    expect(newState.selectedUnits[0].wargearOptions).toHaveLength(1);
+    expect(newState.selectedUnits[0].wargearOptions[0]).toEqual({
+      optionId: 'wargear-option-1',
+      choiceId: 'wargear-choice-2',
+      count: 3,
+    });
   });
 });

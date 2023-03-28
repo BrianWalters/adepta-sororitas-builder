@@ -11,6 +11,7 @@ export default function Builder() {
   const [state, dispatch] = useReducer(builderReducer, makeInitialState());
   const unitPickerRef = useRef<HTMLSelectElement>(null);
   const viewModel = makeBuilderViewModel(state);
+  console.log(`STATE`, state, 'VM', viewModel);
 
   useEffect(() => {
     cmsProvider
@@ -108,25 +109,46 @@ export default function Builder() {
                         modelSet.model._id === wargearOption.modelId,
                     );
                     return (
-                      <div key={wargearOption.id}>
+                      <div className={styles.controlRow} key={wargearOption.id}>
                         Equip
                         <input
                           type="number"
                           max={wargearOption.limit}
                           min={0}
                           size={2}
-                          defaultValue={
+                          value={
                             selectedUnit?.wargearOptions.find(
                               (option) => option.optionId === wargearOption.id,
                             )?.count || 0
                           }
+                          onChange={(evt) =>
+                            dispatch({
+                              type: 'SetWargearOptionAction',
+                              count: parseInt(evt.currentTarget.value, 10),
+                              selectedUnitId: selectedUnit?.id || '',
+                              wargearOptionId: wargearOption.id,
+                            })
+                          }
                         />
-                        {model?.model.name}
-                        with
-                        <select>
+                        <span>{`${model?.model.name || 'unit'} with`}</span>
+                        <select
+                          value={
+                            selectedUnit?.wargearOptions.find(
+                              (option) => option.optionId === wargearOption.id,
+                            )?.choiceId
+                          }
+                          onChange={(evt) =>
+                            dispatch({
+                              type: 'SetWargearOptionAction',
+                              selectedUnitId: selectedUnit?.id || '',
+                              wargearOptionId: wargearOption.id,
+                              wargearChoiceId: evt.currentTarget.value,
+                            })
+                          }
+                        >
                           {wargearOption.wargearChoices.map((choice) => {
                             return (
-                              <option key={choice.id}>
+                              <option key={choice.id} value={choice.id}>
                                 {choice.wargearAdded
                                   .map((wg) => wg.name)
                                   .join(', ')}
