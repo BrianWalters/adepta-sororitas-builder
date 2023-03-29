@@ -462,7 +462,7 @@ describe('Builder view model', () => {
     expect(viewModel.units[0].models[1].wargear[1].name).toEqual('Bolt Pistol');
   });
 
-  it.skip('should apply more than one wargear option to a model if it can', () => {
+  it('should apply more than one wargear option to a model if it can', () => {
     const state: BuilderState = {
       availableUnits: [
         makeTestUnit({
@@ -490,6 +490,7 @@ describe('Builder view model', () => {
           ],
           wargearOptions: [
             makeTestWargearOption({
+              id: 'wargear-option-1',
               wargearRemoved: ['weapon-1'],
               wargearChoices: [
                 {
@@ -510,6 +511,7 @@ describe('Builder view model', () => {
               ],
             }),
             makeTestWargearOption({
+              id: 'wargear-option-2',
               wargearRemoved: ['weapon-1'],
               wargearChoices: [
                 {

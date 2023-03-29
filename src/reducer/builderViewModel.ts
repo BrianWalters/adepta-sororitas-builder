@@ -81,7 +81,7 @@ function makeModelsForModelSet(
 class ModelWargearAdjuster {
   private wargearOptionSelections: WargearOptionState[];
   private wargearDefinitions: {
-    [key: string]: UnitDetail['wargearOptions'][0];
+    [key: string]: WargearOption;
   } = {};
 
   constructor(
@@ -96,63 +96,92 @@ class ModelWargearAdjuster {
   }
 
   public *makeGenerator(): Generator<ModelViewModel> {
-    for (let i = 0; i < this.models.length; ++i) {
-      const wargearOptionState = this.wargearOptionSelections.find(
-        (wargearOption) =>
-          wargearOption.count > 0 &&
-          this.wargearDefinitions[wargearOption.optionId].modelId ===
-            this.models[i]._id,
-      );
-      if (!wargearOptionState) {
-        yield this.models[i];
+    for (let modelIndex = 0; modelIndex < this.models.length; ++modelIndex) {
+      const wargearOptionStates =
+        this.getWargearOptionSelectionsFor(modelIndex);
+      if (wargearOptionStates.length === 0) {
+        yield this.models[modelIndex];
         continue;
       }
 
-      const wargearOptionDefinition =
-        this.wargearDefinitions[wargearOptionState.optionId];
-
-      if (
-        this.doesModelHaveValidWargearToRemoveForOption(
-          wargearOptionDefinition,
-          i,
-        )
+      for (
+        let wargearOptionStateIndex = 0;
+        wargearOptionStateIndex < wargearOptionStates.length;
+        ++wargearOptionStateIndex
       ) {
-        yield this.models[i];
-        continue;
+        const wargearOptionState = wargearOptionStates[wargearOptionStateIndex];
+
+        if (
+          this.doesWargearOptionApplyToModel(modelIndex, wargearOptionState)
+        ) {
+          this.applyWargearOptionToModel(modelIndex, wargearOptionState);
+        }
       }
 
-      wargearOptionState.count--;
-
-      wargearOptionDefinition.wargearRemoved.forEach((wargearIdToRemove) => {
-        this.models[i].wargear.splice(
-          this.models[i].wargear.findIndex(
-            (wg) => wg._id === wargearIdToRemove,
-          ),
-          1,
-        );
-      });
-
-      const wargearToAdd = wargearOptionDefinition.wargearChoices.find(
-        (choice) => choice.id === wargearOptionState.choiceId,
-      );
-      if (!wargearToAdd) {
-        yield this.models[i];
-        continue;
-      }
-
-      yield {
-        ...this.models[i],
-        wargear: [...this.models[i].wargear, ...wargearToAdd.wargearAdded],
-      };
+      yield this.models[modelIndex];
     }
+  }
+
+  private doesWargearOptionApplyToModel(
+    index: number,
+    wargearOptionState: WargearOptionState,
+  ): boolean {
+    const wargearOptionDefinition =
+      this.wargearDefinitions[wargearOptionState.optionId];
+    return this.doesModelHaveValidWargearToRemoveForOption(
+      wargearOptionDefinition,
+      index,
+    );
+  }
+
+  private applyWargearOptionToModel(
+    modelIndex: number,
+    wargearOptionState: WargearOptionState,
+  ): void {
+    wargearOptionState.count--;
+    const wargearOptionDefinition =
+      this.wargearDefinitions[wargearOptionState.optionId];
+    wargearOptionDefinition.wargearRemoved.forEach((wargearIdToRemove) => {
+      this.models[modelIndex].wargear.splice(
+        this.models[modelIndex].wargear.findIndex(
+          (wg) => wg._id === wargearIdToRemove,
+        ),
+        1,
+      );
+    });
+
+    this.models[modelIndex] = {
+      ...this.models[modelIndex],
+      wargear: [
+        ...this.models[modelIndex].wargear,
+        ...(this.getWargearToAddFor(wargearOptionState)?.wargearAdded || []),
+      ],
+    };
+  }
+
+  private getWargearOptionSelectionsFor(modelIndex: number) {
+    return this.wargearOptionSelections.filter(
+      (wargearOption) =>
+        wargearOption.count > 0 &&
+        this.wargearDefinitions[wargearOption.optionId].modelId ===
+          this.models[modelIndex]._id,
+    );
   }
 
   private doesModelHaveValidWargearToRemoveForOption(
     wargearOptionDefinition: WargearOption,
     modelIndex: number,
   ) {
-    return !wargearOptionDefinition.wargearRemoved.every((wargearId) =>
+    return wargearOptionDefinition.wargearRemoved.every((wargearId) =>
       this.models[modelIndex].wargear.find((wg) => wg._id === wargearId),
+    );
+  }
+
+  private getWargearToAddFor(wargearOptionState: WargearOptionState) {
+    const wargearOptionDefinition =
+      this.wargearDefinitions[wargearOptionState.optionId];
+    return wargearOptionDefinition.wargearChoices.find(
+      (choice) => choice.id === wargearOptionState.choiceId,
     );
   }
 }
