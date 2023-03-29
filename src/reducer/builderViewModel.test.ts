@@ -564,4 +564,113 @@ describe('Builder view model', () => {
     expect(viewModel.units[0].models[1].wargear[0].name).toEqual('Bolt Pistol');
     expect(viewModel.units[0].models[1].wargear[1].name).toEqual('Bolt Pistol');
   });
+
+  it('should flag wargear that was added via a wargear option', () => {
+    const state: BuilderState = {
+      availableUnits: [
+        makeTestUnit({
+          defaultWeapons: [
+            {
+              _id: 'weapon-1',
+              key: '123',
+              name: 'Bolt Pistol',
+              type: 'Pistol 1',
+              armorPiercing: 0,
+              damage: '1',
+              range: 12,
+              strength: '4',
+            },
+            {
+              _id: 'weapon-1',
+              key: '456',
+              name: 'Bolt Pistol',
+              type: 'Pistol 1',
+              armorPiercing: 0,
+              damage: '1',
+              range: 12,
+              strength: '4',
+            },
+          ],
+          wargearOptions: [
+            makeTestWargearOption({
+              id: 'wargear-option-1',
+              wargearRemoved: ['weapon-1'],
+              wargearChoices: [
+                {
+                  id: 'wargear-choice-1',
+                  wargearAdded: [
+                    {
+                      _id: 'weapon-2',
+                      key: '456',
+                      name: 'Plasma Pistol',
+                      type: 'Pistol 1',
+                      armorPiercing: -3,
+                      damage: '1',
+                      range: 12,
+                      strength: '7',
+                    },
+                  ],
+                },
+              ],
+            }),
+            makeTestWargearOption({
+              id: 'wargear-option-2',
+              wargearRemoved: ['weapon-1'],
+              wargearChoices: [
+                {
+                  id: 'wargear-choice-2',
+                  wargearAdded: [
+                    {
+                      _id: 'weapon-3',
+                      key: '789',
+                      name: 'Power Sword',
+                      type: 'Melee',
+                      armorPiercing: -3,
+                      damage: '1',
+                      range: 0,
+                      strength: 'User',
+                    },
+                  ],
+                },
+              ],
+            }),
+          ],
+        }),
+      ],
+      selectedUnits: [
+        {
+          id: 'selected-unit-1',
+          wargearOptions: [
+            {
+              optionId: 'wargear-option-1',
+              choiceId: 'wargear-choice-1',
+              count: 1,
+            },
+            {
+              optionId: 'wargear-option-2',
+              choiceId: 'wargear-choice-2',
+              count: 1,
+            },
+          ],
+          baseUnitId: 'unit-1',
+          addedModels: [],
+        },
+      ],
+    };
+
+    const viewModel = makeBuilderViewModel(state);
+
+    expect(viewModel.units[0].models[0].wargear[0].addedFromOption).toEqual(
+      true,
+    );
+    expect(viewModel.units[0].models[0].wargear[1].addedFromOption).toEqual(
+      true,
+    );
+    expect(
+      viewModel.units[0].models[1].wargear[0].addedFromOption,
+    ).toBeUndefined();
+    expect(
+      viewModel.units[0].models[1].wargear[1].addedFromOption,
+    ).toBeUndefined();
+  });
 });

@@ -130,7 +130,7 @@ export default function Builder() {
                             })
                           }
                         />
-                        <span>{`${model?.model.name || 'unit'} with`}</span>
+                        <span>{`${model?.model.name || ''} with`}</span>
                         <select
                           value={
                             selectedUnit?.wargearOptions.find(

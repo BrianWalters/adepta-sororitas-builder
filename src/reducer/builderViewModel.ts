@@ -10,9 +10,11 @@ import { Weapon } from '@/domain/Weapon';
 import { UnitDetail } from '@/domain/UnitDetail';
 import { WargearOption } from '@/domain/WargearOption';
 
-type ModelViewModel = Model & {
+type WargearViewModel = (Wargear | Weapon) & { addedFromOption?: boolean };
+
+export type ModelViewModel = Model & {
   key: string;
-  wargear: Array<Wargear | Weapon>;
+  wargear: Array<WargearViewModel>;
 };
 
 type UnitViewModel = {
@@ -154,7 +156,7 @@ class ModelWargearAdjuster {
       ...this.models[modelIndex],
       wargear: [
         ...this.models[modelIndex].wargear,
-        ...(this.getWargearToAddFor(wargearOptionState)?.wargearAdded || []),
+        ...this.getWargearToAddFor(wargearOptionState),
       ],
     };
   }
@@ -177,12 +179,23 @@ class ModelWargearAdjuster {
     );
   }
 
-  private getWargearToAddFor(wargearOptionState: WargearOptionState) {
+  private getWargearToAddFor(
+    wargearOptionState: WargearOptionState,
+  ): WargearViewModel[] {
     const wargearOptionDefinition =
       this.wargearDefinitions[wargearOptionState.optionId];
-    return wargearOptionDefinition.wargearChoices.find(
+    const choice = wargearOptionDefinition.wargearChoices.find(
       (choice) => choice.id === wargearOptionState.choiceId,
     );
+
+    if (!choice) return [];
+
+    return choice.wargearAdded.map((wargear) => {
+      return {
+        ...wargear,
+        addedFromOption: true,
+      };
+    });
   }
 }
 

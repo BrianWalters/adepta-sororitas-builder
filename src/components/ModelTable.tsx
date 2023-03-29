@@ -1,10 +1,11 @@
 import { FunctionComponent } from 'react';
-import { BuilderViewModel } from '@/reducer/builderViewModel';
+import { ModelViewModel } from '@/reducer/builderViewModel';
 import { PortableText } from '@portabletext/react';
 import { TypedObject } from '@portabletext/types';
+import styles from '../styles/ModelTable.module.css';
 
 interface ModelTableProps {
-  model: BuilderViewModel['units'][0]['models'][0];
+  model: ModelViewModel;
 }
 
 export const ModelTable: FunctionComponent<ModelTableProps> = ({ model }) => {
@@ -60,16 +61,21 @@ export const ModelTable: FunctionComponent<ModelTableProps> = ({ model }) => {
           <th>D</th>
           <th colSpan={4}>Abilities</th>
         </tr>
-        {model.wargear.map((wargear, index) => {
+        {model.wargear.map((wargear) => {
           const isWeapon = 'strength' in wargear;
           return (
             <tr key={wargear.key}>
-              <td>{wargear.name}</td>
+              <td
+                className={
+                  wargear.addedFromOption ? styles.addedFromOption : ''
+                }
+              >
+                {wargear.name}
+              </td>
               {isWeapon && (
                 <>
                   <td className="text-right">
-                    {wargear.range}
-                    {'"'}
+                    {wargear.range > 0 ? `${wargear.range}"` : 'Melee'}
                   </td>
                   <td className="text-center">{wargear.type}</td>
                   <td className="text-right">{wargear.strength}</td>
