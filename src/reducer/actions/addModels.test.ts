@@ -109,6 +109,7 @@ describe('addModels action', () => {
           wargearOptions: [],
           baseUnitId: 'unit-1',
           addedModels: ['model-spec-2'],
+          attachedUnits: [],
         },
       ],
     };
@@ -154,6 +155,7 @@ describe('addModels action', () => {
           wargearOptions: [],
           baseUnitId: 'unit-1',
           addedModels: ['model-spec-2'],
+          attachedUnits: [],
         },
       ],
     };

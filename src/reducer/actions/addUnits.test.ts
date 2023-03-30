@@ -30,6 +30,7 @@ describe('addUnits action', () => {
           wargearOptions: [],
           baseUnitId: 'unit-1',
           addedModels: [],
+          attachedUnits: [],
         },
       ],
     };

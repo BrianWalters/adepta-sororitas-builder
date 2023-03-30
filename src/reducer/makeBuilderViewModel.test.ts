@@ -17,6 +17,7 @@ describe('Builder view model', () => {
           baseUnitId: 'unit-1',
           addedModels: [],
           wargearOptions: [],
+          attachedUnits: [],
         },
       ],
     };
@@ -58,6 +59,7 @@ describe('Builder view model', () => {
           baseUnitId: 'unit-1',
           addedModels: ['model-spec-2', 'model-spec-3'],
           wargearOptions: [],
+          attachedUnits: [],
         },
       ],
     };
@@ -93,6 +95,7 @@ describe('Builder view model', () => {
           baseUnitId: 'unit-1',
           addedModels: ['model-spec-2'],
           wargearOptions: [],
+          attachedUnits: [],
         },
       ],
     };
@@ -116,18 +119,21 @@ describe('Builder view model', () => {
           baseUnitId: 'unit-1',
           addedModels: [],
           wargearOptions: [],
+          attachedUnits: [],
         },
         {
           id: '2',
           baseUnitId: 'unit-1',
           addedModels: [],
           wargearOptions: [],
+          attachedUnits: [],
         },
         {
           id: '3',
           baseUnitId: 'unit-1',
           addedModels: [],
           wargearOptions: [],
+          attachedUnits: [],
         },
       ],
     };
@@ -155,24 +161,28 @@ describe('Builder view model', () => {
           baseUnitId: 'unit-1',
           addedModels: [],
           wargearOptions: [],
+          attachedUnits: [],
         },
         {
           id: '2',
           baseUnitId: 'unit-2',
           addedModels: [],
           wargearOptions: [],
+          attachedUnits: [],
         },
         {
           id: '3',
           baseUnitId: 'unit-2',
           addedModels: [],
           wargearOptions: [],
+          attachedUnits: [],
         },
         {
           id: '4',
           baseUnitId: 'unit-1',
           addedModels: [],
           wargearOptions: [],
+          attachedUnits: [],
         },
       ],
     };
@@ -195,6 +205,7 @@ describe('Builder view model', () => {
           baseUnitId: 'unit-1',
           addedModels: [],
           wargearOptions: [],
+          attachedUnits: [],
         },
       ],
     };
@@ -247,6 +258,7 @@ describe('Builder view model', () => {
           baseUnitId: 'unit-1',
           addedModels: ['model-spec-2'],
           wargearOptions: [],
+          attachedUnits: [],
         },
       ],
     };
@@ -270,6 +282,7 @@ describe('Builder view model', () => {
           wargearOptions: [],
           baseUnitId: 'unit-1',
           addedModels: [],
+          attachedUnits: [],
         },
       ],
     };
@@ -296,6 +309,7 @@ describe('Builder view model', () => {
           ],
           baseUnitId: 'unit-1',
           addedModels: [],
+          attachedUnits: [],
         },
       ],
     };
@@ -373,6 +387,7 @@ describe('Builder view model', () => {
           ],
           baseUnitId: 'unit-1',
           addedModels: ['model-spec-2'],
+          attachedUnits: [],
         },
       ],
     };
@@ -449,6 +464,7 @@ describe('Builder view model', () => {
           ],
           baseUnitId: 'unit-1',
           addedModels: [],
+          attachedUnits: [],
         },
       ],
     };
@@ -552,6 +568,7 @@ describe('Builder view model', () => {
           ],
           baseUnitId: 'unit-1',
           addedModels: [],
+          attachedUnits: [],
         },
       ],
     };
@@ -655,6 +672,7 @@ describe('Builder view model', () => {
           ],
           baseUnitId: 'unit-1',
           addedModels: [],
+          attachedUnits: [],
         },
       ],
     };
@@ -752,6 +770,7 @@ describe('Builder view model', () => {
           id: 'selected-unit-1',
           addedModels: [],
           baseUnitId: 'unit-1',
+          attachedUnits: [],
           wargearOptions: [
             {
               optionId: 'double-buzz-blade-option',
@@ -822,6 +841,7 @@ describe('Builder view model', () => {
           id: 'selected-unit-1',
           baseUnitId: 'unit-1',
           addedModels: [],
+          attachedUnits: [],
           wargearOptions: [
             {
               optionId: 'wargear-option-1',

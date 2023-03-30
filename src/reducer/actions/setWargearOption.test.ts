@@ -12,6 +12,7 @@ describe('setWargearOption action', () => {
           wargearOptions: [],
           baseUnitId: 'unit-1',
           addedModels: [],
+          attachedUnits: [],
         },
       ],
     };
@@ -95,6 +96,7 @@ describe('setWargearOption action', () => {
           ],
           baseUnitId: 'unit-1',
           addedModels: [],
+          attachedUnits: [],
         },
       ],
     };
@@ -131,6 +133,7 @@ describe('setWargearOption action', () => {
           wargearOptions: [],
           baseUnitId: 'unit-1',
           addedModels: [],
+          attachedUnits: [],
         },
       ],
     };
@@ -201,6 +204,7 @@ describe('setWargearOption action', () => {
           ],
           baseUnitId: 'unit-1',
           addedModels: [],
+          attachedUnits: [],
         },
       ],
     };
@@ -276,6 +280,7 @@ describe('setWargearOption action', () => {
           ],
           baseUnitId: 'unit-1',
           addedModels: [],
+          attachedUnits: [],
         },
       ],
     };
@@ -347,6 +352,7 @@ describe('setWargearOption action', () => {
           ],
           baseUnitId: 'unit-1',
           addedModels: [],
+          attachedUnits: [],
         },
       ],
     };
@@ -370,6 +376,7 @@ describe('setWargearOption action', () => {
           wargearOptions: [],
           baseUnitId: 'unit-1',
           addedModels: [],
+          attachedUnits: [],
         },
       ],
     };
@@ -439,6 +446,7 @@ describe('setWargearOption action', () => {
           ],
           baseUnitId: 'unit-1',
           addedModels: [],
+          attachedUnits: [],
         },
       ],
     };

@@ -11,6 +11,7 @@ export interface SelectedUnitState {
   baseUnitId: string;
   addedModels: string[];
   wargearOptions: WargearOptionState[];
+  attachedUnits: string[];
 }
 
 export interface BuilderState {

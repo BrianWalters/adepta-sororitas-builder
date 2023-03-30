@@ -95,6 +95,7 @@ function computeUnits(state: BuilderState): BuilderViewModel['units'] {
         keywords: baseUnit.keywords,
         power: computeTotalPower(state.availableUnits, [selectedUnit]),
         models: makeModelsForUnit(baseUnit, selectedUnit),
+        attachedUnits: [],
       };
     });
 }

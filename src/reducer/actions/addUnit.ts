@@ -22,6 +22,7 @@ export const addUnit = (
         id: uuidv4(),
         addedModels: [],
         wargearOptions: [],
+        attachedUnits: [],
       },
     ],
   };
