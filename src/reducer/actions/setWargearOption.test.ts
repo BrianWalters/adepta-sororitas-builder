@@ -41,6 +41,7 @@ describe('setWargearOption action', () => {
               limit: 1,
               modelId: 'model-1',
               wargearRemoved: ['weapon-1'],
+              wargearRequirements: [],
               wargearChoices: [
                 {
                   id: 'wargear-choice-1',
@@ -60,6 +61,7 @@ describe('setWargearOption action', () => {
               limit: 2,
               modelId: 'model-1',
               wargearRemoved: ['weapon-1'],
+              wargearRequirements: [],
               wargearChoices: [
                 {
                   id: 'wargear-choice-2',
@@ -154,6 +156,7 @@ describe('setWargearOption action', () => {
               limit: 2,
               modelId: 'model-1',
               wargearRemoved: ['weapon-1'],
+              wargearRequirements: [],
               wargearChoices: [
                 {
                   id: 'wargear-choice-1',
@@ -228,6 +231,7 @@ describe('setWargearOption action', () => {
               limit: 2,
               modelId: 'model-1',
               wargearRemoved: ['weapon-1'],
+              wargearRequirements: [],
               wargearChoices: [
                 {
                   id: 'wargear-choice-1',

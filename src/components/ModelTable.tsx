@@ -1,8 +1,8 @@
 import { FunctionComponent } from 'react';
-import { ModelViewModel } from '@/reducer/builderViewModel';
 import { PortableText } from '@portabletext/react';
 import { TypedObject } from '@portabletext/types';
 import styles from '../styles/ModelTable.module.css';
+import { ModelViewModel } from '@/reducer/BuilderViewModel';
 
 interface ModelTableProps {
   model: ModelViewModel;

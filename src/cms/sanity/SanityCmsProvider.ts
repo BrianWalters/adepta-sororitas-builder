@@ -62,6 +62,10 @@ export class SanityCmsProvider implements CmsProviderInterface {
             modelId: wg?.model?._id,
             wargearRemoved:
               wg?.wargearRemoved?.map((removed: any) => removed._id) || [],
+            wargearRequirements:
+              wg?.wargearRequirements?.map(
+                (requirement: any) => requirement._id,
+              ) || [],
           };
         }),
       });

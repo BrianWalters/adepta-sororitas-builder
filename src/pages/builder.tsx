@@ -3,7 +3,7 @@ import { useEffect, useReducer, useRef } from 'react';
 import { builderReducer, makeInitialState } from '@/reducer/builderReducer';
 import { cmsProvider } from '@/cms/CmsProvider';
 import styles from '../styles/Builder.module.css';
-import { makeBuilderViewModel } from '@/reducer/builderViewModel';
+import { makeBuilderViewModel } from '@/reducer/makeBuilderViewModel';
 import { SimpleList } from '@/components/SimpleList';
 import { ModelTable } from '@/components/ModelTable';
 

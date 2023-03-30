@@ -5,7 +5,7 @@ import {
   makeTestWargearOption,
   makeTestWeapon,
 } from '@/testHelpers';
-import { makeBuilderViewModel } from '@/reducer/builderViewModel';
+import { makeBuilderViewModel } from '@/reducer/makeBuilderViewModel';
 
 describe('Builder view model', () => {
   it('should add up the power of the selected units', () => {
@@ -782,5 +782,72 @@ describe('Builder view model', () => {
     expect(viewModel.units[0].models[1].wargear[1].name).toEqual(
       'Penitent buzz-blade',
     );
+  });
+
+  it('should only apply a wargear option if the requirements are met', () => {
+    const state: BuilderState = {
+      availableUnits: [
+        makeTestUnit({
+          wargearOptions: [
+            makeTestWargearOption({
+              wargearRemoved: [],
+              wargearRequirements: ['weapon-1'],
+            }),
+            makeTestWargearOption({
+              id: 'wargear-option-2',
+              wargearRemoved: ['weapon-1'],
+              wargearChoices: [
+                {
+                  id: 'wargear-choice-2',
+                  wargearAdded: [
+                    makeTestWeapon({
+                      _id: 'meltagun',
+                      name: 'Meltagun',
+                      key: 'meltagun-key-1',
+                      damage: 'D6',
+                      armorPiercing: -4,
+                      strength: '8',
+                      range: 12,
+                      type: 'Assault 1',
+                    }),
+                  ],
+                },
+              ],
+            }),
+          ],
+        }),
+      ],
+      selectedUnits: [
+        {
+          id: 'selected-unit-1',
+          baseUnitId: 'unit-1',
+          addedModels: [],
+          wargearOptions: [
+            {
+              optionId: 'wargear-option-1',
+              choiceId: 'wargear-choice-1',
+              count: 1,
+            },
+            {
+              optionId: 'wargear-option-2',
+              count: 1,
+              choiceId: 'wargear-choice-2',
+            },
+          ],
+        },
+      ],
+    };
+
+    const viewModel = makeBuilderViewModel(state);
+
+    expect(viewModel.units[0].models[0].wargear).toHaveLength(2);
+    expect(viewModel.units[0].models[0].wargear[0].name).toEqual('Weapon');
+    expect(viewModel.units[0].models[0].wargear[1].name).toEqual('Wargear');
+    expect(viewModel.units[0].models[1].wargear).toHaveLength(1);
+    expect(viewModel.units[0].models[1].wargear[0].name).toEqual('Meltagun');
+    expect(viewModel.units[0].models[2].wargear).toHaveLength(1);
+    expect(viewModel.units[0].models[2].wargear[0].name).toEqual('Weapon');
+    expect(viewModel.units[0].models[3].wargear).toHaveLength(1);
+    expect(viewModel.units[0].models[3].wargear[0].name).toEqual('Weapon');
   });
 });

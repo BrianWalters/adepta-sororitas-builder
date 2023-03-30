@@ -33,6 +33,9 @@ export const unitDetails = `
     wargearRemoved[]-> {
       _id
     },
+    wargearRequirements[]->{
+      _id
+    },
     wargearChoices[] {
       wargearAdded[]->
     }

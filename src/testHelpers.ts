@@ -1,6 +1,7 @@
 import { UnitDetail } from '@/domain/UnitDetail';
 import { Model } from '@/domain/Model';
 import { Weapon } from '@/domain/Weapon';
+import { WargearOption } from '@/domain/WargearOption';
 
 export const makeTestModel = (partialModel: Partial<Model> = {}) => {
   return {
@@ -21,13 +22,14 @@ export const makeTestModel = (partialModel: Partial<Model> = {}) => {
 };
 
 export const makeTestWargearOption = (
-  partialWargearOption: Partial<UnitDetail['wargearOptions'][0]> = {},
+  partialWargearOption: Partial<WargearOption> = {},
 ) => {
   return {
     id: 'wargear-option-1',
     limit: 1,
     modelId: 'model-1',
     wargearRemoved: ['weapon-1'],
+    wargearRequirements: [],
     wargearChoices: [
       {
         id: 'wargear-choice-1',

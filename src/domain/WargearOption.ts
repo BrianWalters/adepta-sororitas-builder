@@ -8,6 +8,7 @@ export const WargearOptionSchema = z.object({
   limit: z.number().int(),
   modelId: z.string().nullish(),
   wargearRemoved: z.array(z.string()).default([]),
+  wargearRequirements: z.array(z.string()).default([]),
   wargearChoices: z.array(
     z.object({
       id: z.string().default(() => uuidv4()),
