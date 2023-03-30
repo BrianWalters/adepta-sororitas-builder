@@ -1,5 +1,6 @@
 import { UnitDetail } from '@/domain/UnitDetail';
 import { Model } from '@/domain/Model';
+import { Weapon } from '@/domain/Weapon';
 
 export const makeTestModel = (partialModel: Partial<Model> = {}) => {
   return {
@@ -44,6 +45,20 @@ export const makeTestWargearOption = (
   };
 };
 
+export function makeTestWeapon(partialWeapon: Partial<Weapon> = {}): Weapon {
+  return {
+    _id: 'weapon-1',
+    key: '123',
+    name: 'Weapon',
+    type: 'Rapid Fire 1',
+    armorPiercing: 0,
+    damage: '1',
+    range: 24,
+    strength: '4',
+    ...partialWeapon,
+  };
+}
+
 export const makeTestUnit = (
   partialUnit: Partial<UnitDetail> = {},
 ): UnitDetail => {
@@ -57,18 +72,7 @@ export const makeTestUnit = (
       },
     ],
     name: 'Unit',
-    defaultWeapons: [
-      {
-        _id: 'weapon-1',
-        key: '123',
-        name: 'Weapon',
-        type: 'Rapid Fire 1',
-        armorPiercing: 0,
-        damage: '1',
-        range: 24,
-        strength: '4',
-      },
-    ],
+    defaultWeapons: [makeTestWeapon()],
     keywords: ['Infantry'],
     models: [
       {

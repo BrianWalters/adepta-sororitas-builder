@@ -3,6 +3,7 @@ import {
   makeTestModel,
   makeTestUnit,
   makeTestWargearOption,
+  makeTestWeapon,
 } from '@/testHelpers';
 import { makeBuilderViewModel } from '@/reducer/builderViewModel';
 
@@ -672,5 +673,114 @@ describe('Builder view model', () => {
     expect(
       viewModel.units[0].models[1].wargear[1].addedFromOption,
     ).toBeUndefined();
+  });
+
+  it('should allow wargear options to skip models and apply to those that fit the requirements', () => {
+    const state: BuilderState = {
+      availableUnits: [
+        makeTestUnit({
+          models: [
+            {
+              id: 'model-set-1',
+              model: makeTestModel({
+                _id: 'mortifier',
+                name: 'Mortifier',
+              }),
+              count: 2,
+              additionalPowerCost: 0,
+            },
+          ],
+          defaultWeapons: [
+            makeTestWeapon({
+              _id: 'penitent-flail',
+              name: 'Penitent flail',
+              key: 'penitent-flail-key-1',
+            }),
+            makeTestWeapon({
+              _id: 'penitent-flail',
+              name: 'Penitent flail',
+              key: 'penitent-flail-key-2',
+            }),
+          ],
+          wargearOptions: [
+            makeTestWargearOption({
+              id: 'double-buzz-blade-option',
+              limit: 2,
+              modelId: 'mortifier',
+              wargearRemoved: ['penitent-flail', 'penitent-flail'],
+              wargearChoices: [
+                {
+                  id: 'double-buzz-blades',
+                  wargearAdded: [
+                    makeTestWeapon({
+                      _id: 'penitent-buzz-blade',
+                      key: 'buzz-blade-key-1',
+                      name: 'Penitent buzz-blade',
+                    }),
+                    makeTestWeapon({
+                      _id: 'penitent-buzz-blade',
+                      key: 'buzz-blade-key-2',
+                      name: 'Penitent buzz-blade',
+                    }),
+                  ],
+                },
+              ],
+            }),
+            makeTestWargearOption({
+              id: 'single-buzz-blade-option',
+              limit: 2,
+              modelId: 'mortifier',
+              wargearRemoved: ['penitent-flail'],
+              wargearChoices: [
+                {
+                  id: 'one-buzz-blade',
+                  wargearAdded: [
+                    makeTestWeapon({
+                      _id: 'penitent-buzz-blade',
+                      key: 'buzz-blade-key-3',
+                      name: 'Penitent buzz-blade',
+                    }),
+                  ],
+                },
+              ],
+            }),
+          ],
+        }),
+      ],
+      selectedUnits: [
+        {
+          id: 'selected-unit-1',
+          addedModels: [],
+          baseUnitId: 'unit-1',
+          wargearOptions: [
+            {
+              optionId: 'double-buzz-blade-option',
+              count: 1,
+              choiceId: 'double-buzz-blades',
+            },
+            {
+              optionId: 'single-buzz-blade-option',
+              count: 1,
+              choiceId: 'one-buzz-blade',
+            },
+          ],
+        },
+      ],
+    };
+
+    const viewModel = makeBuilderViewModel(state);
+
+    expect(viewModel.units[0].models[0].wargear[0].name).toEqual(
+      'Penitent buzz-blade',
+    );
+    expect(viewModel.units[0].models[0].wargear[1].name).toEqual(
+      'Penitent buzz-blade',
+    );
+    expect(viewModel.units[0].models[1].wargear[0].name).toEqual(
+      'Penitent flail',
+    );
+    expect(viewModel.units[0].models[1].wargear[1].name).toEqual(
+      'Penitent buzz-blade',
+    );
   });
 });
