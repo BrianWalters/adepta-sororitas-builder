@@ -89,3 +89,95 @@ export const makeTestUnit = (
     ...partialUnit,
   };
 };
+
+export function makeTestMortifier() {
+  return makeTestUnit({
+    _id: 'unit-mortifier',
+    keywords: ['Vehicle'],
+    models: [
+      {
+        id: 'mortifier-model-set-1',
+        model: makeTestModel({
+          _id: 'mortifier',
+          name: 'Mortifier',
+        }),
+        count: 2,
+        additionalPowerCost: 0,
+      },
+    ],
+    defaultWeapons: [
+      makeTestWeapon({
+        _id: 'penitent-flail',
+        name: 'Penitent flail',
+        key: 'penitent-flail-key-1',
+      }),
+      makeTestWeapon({
+        _id: 'penitent-flail',
+        name: 'Penitent flail',
+        key: 'penitent-flail-key-2',
+      }),
+    ],
+    wargearOptions: [
+      makeTestWargearOption({
+        id: 'double-buzz-blade-option',
+        limit: 2,
+        modelId: 'mortifier',
+        wargearRemoved: ['penitent-flail', 'penitent-flail'],
+        wargearChoices: [
+          {
+            id: 'double-buzz-blades',
+            wargearAdded: [
+              makeTestWeapon({
+                _id: 'penitent-buzz-blade',
+                key: 'buzz-blade-key-1',
+                name: 'Penitent buzz-blade',
+              }),
+              makeTestWeapon({
+                _id: 'penitent-buzz-blade',
+                key: 'buzz-blade-key-2',
+                name: 'Penitent buzz-blade',
+              }),
+            ],
+          },
+        ],
+      }),
+      makeTestWargearOption({
+        id: 'single-buzz-blade-option',
+        limit: 2,
+        modelId: 'mortifier',
+        wargearRemoved: ['penitent-flail'],
+        wargearChoices: [
+          {
+            id: 'one-buzz-blade',
+            wargearAdded: [
+              makeTestWeapon({
+                _id: 'penitent-buzz-blade',
+                key: 'buzz-blade-key-3',
+                name: 'Penitent buzz-blade',
+              }),
+            ],
+          },
+        ],
+      }),
+    ],
+  });
+}
+
+export function makeTestCanoness() {
+  return makeTestUnit({
+    _id: 'unit-canoness',
+    name: 'Canoness',
+    keywords: ['Character', 'Infantry'],
+    models: [
+      {
+        id: 'model-spec-canoness',
+        count: 1,
+        additionalPowerCost: 0,
+        model: makeTestModel({
+          _id: 'canoness-model',
+          name: 'Canoness',
+        }),
+      },
+    ],
+  });
+}

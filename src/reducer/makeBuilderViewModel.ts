@@ -1,7 +1,7 @@
 import { BuilderState, SelectedUnitState } from '@/reducer/state/BuilderState';
 import { v4 as uuidv4 } from 'uuid';
 import { UnitDetail } from '@/domain/UnitDetail';
-import { BuilderViewModel } from '@/reducer/BuilderViewModel';
+import { BuilderViewModel, UnitViewModel } from '@/reducer/BuilderViewModel';
 import { ModelWargearAdjuster } from '@/reducer/modelWargearAdjuster';
 
 function computeTotalPower(
@@ -78,7 +78,7 @@ function makeModelsForUnit(
 }
 
 function computeUnits(state: BuilderState): BuilderViewModel['units'] {
-  return state.selectedUnits
+  const unitViewModels: UnitViewModel[] = state.selectedUnits
     .filter((selectedUnit) =>
       state.availableUnits.find((au) => au._id === selectedUnit.baseUnitId),
     )
@@ -96,8 +96,47 @@ function computeUnits(state: BuilderState): BuilderViewModel['units'] {
         power: computeTotalPower(state.availableUnits, [selectedUnit]),
         models: makeModelsForUnit(baseUnit, selectedUnit),
         attachedUnits: [],
+        canAttachTo: [],
       };
     });
+
+  const hostUnitsOptions = unitViewModels
+    .filter(
+      (unitViewModel) =>
+        unitViewModel.keywords.includes('Infantry') &&
+        !unitViewModel.keywords.includes('Character'),
+    )
+    .map((unitViewModel) => {
+      return {
+        id: unitViewModel.id,
+        name: unitViewModel.name,
+      };
+    });
+
+  unitViewModels.forEach((unitViewModel) => {
+    if (unitViewModel.keywords.includes('Character'))
+      unitViewModel.canAttachTo = hostUnitsOptions;
+  });
+
+  state.selectedUnits.forEach((unit, index, array) => {
+    const unitId = unit.id;
+    const hostUnit = array.find((unit) => unit.attachedUnits.includes(unitId));
+    if (hostUnit) {
+      const hostUnitViewModel = unitViewModels.find(
+        (unitViewModel) => unitViewModel.id === hostUnit.id,
+      );
+      const attachedViewModel = unitViewModels.splice(
+        unitViewModels.findIndex(
+          (unitViewModel) => unitViewModel.id === unitId,
+        ),
+        1,
+      );
+      if (!hostUnitViewModel || !attachedViewModel) return;
+      hostUnitViewModel.attachedUnits.push(attachedViewModel[0]);
+    }
+  });
+
+  return unitViewModels;
 }
 
 function compareUnitNameAlphabetically(

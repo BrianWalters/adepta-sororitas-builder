@@ -23,7 +23,7 @@ export const makeInitialState = (): BuilderState => {
   };
 };
 
-type BuilderAction =
+export type BuilderAction =
   | SetAvailableUnitsAction
   | AddUnitAction
   | AddModelsAction

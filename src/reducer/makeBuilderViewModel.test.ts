@@ -1,6 +1,8 @@
 import { BuilderState } from '@/reducer/state/BuilderState';
 import {
+  makeTestCanoness,
   makeTestModel,
+  makeTestMortifier,
   makeTestUnit,
   makeTestWargearOption,
   makeTestWeapon,
@@ -695,81 +697,12 @@ describe('Builder view model', () => {
 
   it('should allow wargear options to skip models and apply to those that fit the requirements', () => {
     const state: BuilderState = {
-      availableUnits: [
-        makeTestUnit({
-          models: [
-            {
-              id: 'model-set-1',
-              model: makeTestModel({
-                _id: 'mortifier',
-                name: 'Mortifier',
-              }),
-              count: 2,
-              additionalPowerCost: 0,
-            },
-          ],
-          defaultWeapons: [
-            makeTestWeapon({
-              _id: 'penitent-flail',
-              name: 'Penitent flail',
-              key: 'penitent-flail-key-1',
-            }),
-            makeTestWeapon({
-              _id: 'penitent-flail',
-              name: 'Penitent flail',
-              key: 'penitent-flail-key-2',
-            }),
-          ],
-          wargearOptions: [
-            makeTestWargearOption({
-              id: 'double-buzz-blade-option',
-              limit: 2,
-              modelId: 'mortifier',
-              wargearRemoved: ['penitent-flail', 'penitent-flail'],
-              wargearChoices: [
-                {
-                  id: 'double-buzz-blades',
-                  wargearAdded: [
-                    makeTestWeapon({
-                      _id: 'penitent-buzz-blade',
-                      key: 'buzz-blade-key-1',
-                      name: 'Penitent buzz-blade',
-                    }),
-                    makeTestWeapon({
-                      _id: 'penitent-buzz-blade',
-                      key: 'buzz-blade-key-2',
-                      name: 'Penitent buzz-blade',
-                    }),
-                  ],
-                },
-              ],
-            }),
-            makeTestWargearOption({
-              id: 'single-buzz-blade-option',
-              limit: 2,
-              modelId: 'mortifier',
-              wargearRemoved: ['penitent-flail'],
-              wargearChoices: [
-                {
-                  id: 'one-buzz-blade',
-                  wargearAdded: [
-                    makeTestWeapon({
-                      _id: 'penitent-buzz-blade',
-                      key: 'buzz-blade-key-3',
-                      name: 'Penitent buzz-blade',
-                    }),
-                  ],
-                },
-              ],
-            }),
-          ],
-        }),
-      ],
+      availableUnits: [makeTestMortifier()],
       selectedUnits: [
         {
           id: 'selected-unit-1',
           addedModels: [],
-          baseUnitId: 'unit-1',
+          baseUnitId: 'unit-mortifier',
           attachedUnits: [],
           wargearOptions: [
             {
@@ -869,5 +802,86 @@ describe('Builder view model', () => {
     expect(viewModel.units[0].models[2].wargear[0].name).toEqual('Weapon');
     expect(viewModel.units[0].models[3].wargear).toHaveLength(1);
     expect(viewModel.units[0].models[3].wargear[0].name).toEqual('Weapon');
+  });
+
+  it('should attach units to their host units', () => {
+    const state: BuilderState = {
+      availableUnits: [makeTestUnit(), makeTestCanoness()],
+      selectedUnits: [
+        {
+          id: 'selected-unit-1',
+          wargearOptions: [],
+          attachedUnits: ['selected-canoness'],
+          baseUnitId: 'unit-1',
+          addedModels: [],
+        },
+        {
+          id: 'selected-canoness',
+          wargearOptions: [],
+          baseUnitId: 'unit-canoness',
+          addedModels: [],
+          attachedUnits: [],
+        },
+      ],
+    };
+
+    const viewModel = makeBuilderViewModel(state);
+
+    expect(viewModel.units).toHaveLength(1);
+    expect(viewModel.units[0].attachedUnits).toHaveLength(1);
+    expect(viewModel.units[0].attachedUnits[0].id).toEqual('selected-canoness');
+  });
+
+  it('should list the available attachments on character units to infantry (non-character) units', () => {
+    const state: BuilderState = {
+      availableUnits: [makeTestUnit(), makeTestCanoness(), makeTestMortifier()],
+      selectedUnits: [
+        {
+          id: 'selected-unit-1',
+          wargearOptions: [],
+          attachedUnits: [],
+          baseUnitId: 'unit-1',
+          addedModels: [],
+        },
+        {
+          id: 'selected-canoness',
+          wargearOptions: [],
+          baseUnitId: 'unit-canoness',
+          addedModels: [],
+          attachedUnits: [],
+        },
+        {
+          id: 'selected-unit-2',
+          wargearOptions: [],
+          attachedUnits: [],
+          baseUnitId: 'unit-1',
+          addedModels: [],
+        },
+        {
+          id: 'selected-mortifier-1',
+          wargearOptions: [],
+          attachedUnits: [],
+          baseUnitId: 'unit-mortifier',
+          addedModels: [],
+        },
+      ],
+    };
+
+    const viewModel = makeBuilderViewModel(state);
+
+    expect(viewModel.units[0].canAttachTo).toHaveLength(2);
+    expect(viewModel.units[0].canAttachTo).toEqual([
+      {
+        id: 'selected-unit-1',
+        name: 'Unit #1',
+      },
+      {
+        id: 'selected-unit-2',
+        name: 'Unit #2',
+      },
+    ]);
+    expect(viewModel.units[1].canAttachTo).toHaveLength(0);
+    expect(viewModel.units[2].canAttachTo).toHaveLength(0);
+    expect(viewModel.units[3].canAttachTo).toHaveLength(0);
   });
 });

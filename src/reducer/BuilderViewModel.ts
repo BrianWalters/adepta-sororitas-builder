@@ -12,7 +12,7 @@ export type ModelViewModel = Model & {
   wargear: Array<WargearViewModel>;
 };
 
-type UnitViewModel = {
+export interface UnitViewModel {
   id: string;
   baseUnitId: string;
   name: string;
@@ -21,7 +21,8 @@ type UnitViewModel = {
   keywords: string[];
   models: ModelViewModel[];
   attachedUnits: UnitViewModel[];
-};
+  canAttachTo: { id: string; name: string }[];
+}
 
 export interface BuilderViewModel {
   totalPower: number;
