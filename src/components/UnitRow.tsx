@@ -1,28 +1,52 @@
-import styles from '@/styles/Builder.module.css';
+import styles from '@/styles/UnitRow.module.css';
 import { SimpleList } from '@/components/SimpleList';
 import { ModelTable } from '@/components/ModelTable';
 import { Dispatch, FunctionComponent } from 'react';
-import { UnitDetail } from '@/domain/UnitDetail';
 import { UnitViewModel } from '@/reducer/BuilderViewModel';
-import { SelectedUnitState } from '@/reducer/state/BuilderState';
+import { BuilderState } from '@/reducer/state/BuilderState';
 import { BuilderAction } from '@/reducer/builderReducer';
 
 interface UnitRowProps {
-  baseUnit: UnitDetail;
-  selectedUnit: SelectedUnitState;
+  state: BuilderState;
+  selectedUnitId: string;
   unitViewModel: UnitViewModel;
   dispatch: Dispatch<BuilderAction>;
+  attachedTo?: UnitViewModel;
 }
 
 export const UnitRow: FunctionComponent<UnitRowProps> = ({
-  baseUnit,
-  selectedUnit,
+  state,
+  selectedUnitId,
   unitViewModel,
   dispatch,
+  attachedTo = null,
 }) => {
+  const selectedUnit = state.selectedUnits.find(
+    (su) => su.id === selectedUnitId,
+  );
+  if (!selectedUnit) return <div>error</div>;
+
+  const baseUnit = state.availableUnits.find(
+    (au) => au._id === selectedUnit.baseUnitId,
+  );
+  if (!baseUnit) return <div>error</div>;
+
   return (
-    <div className={styles.unitRow}>
-      <img src={unitViewModel.imageUrl} alt={unitViewModel.name} />
+    <>
+      <div>
+        {!!attachedTo && (
+          <div className="flex-row">
+            <div>Attached to {attachedTo.name}</div>
+            <img
+              src={attachedTo.imageUrl}
+              alt={attachedTo.name}
+              width={80}
+              height={80}
+            />
+          </div>
+        )}
+        <img src={unitViewModel.imageUrl} alt={unitViewModel.name} />
+      </div>
       <div className={styles.modelStack}>
         <div className="flex-row">
           <h2>{unitViewModel.name}</h2>
@@ -38,6 +62,7 @@ export const UnitRow: FunctionComponent<UnitRowProps> = ({
           <label className="flex-row">
             Attach unit to
             <select
+              value={attachedTo?.id}
               onChange={(evt) => {
                 if (evt.currentTarget.value === 'none')
                   dispatch({
@@ -142,6 +167,18 @@ export const UnitRow: FunctionComponent<UnitRowProps> = ({
           );
         })}
       </div>
-    </div>
+      {unitViewModel.attachedUnits.map((attachedUnit) => {
+        return (
+          <UnitRow
+            key={attachedUnit.id}
+            state={state}
+            selectedUnitId={attachedUnit.id}
+            unitViewModel={attachedUnit}
+            dispatch={dispatch}
+            attachedTo={unitViewModel}
+          />
+        );
+      })}
+    </>
   );
 };

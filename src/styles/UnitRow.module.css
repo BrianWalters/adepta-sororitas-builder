@@ -1,0 +1,12 @@
+.modelStack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.controlRow {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: 1ch;
+}

@@ -55,26 +55,19 @@ export default function Builder() {
           <span className="power-badge">{viewModel.totalPower}</span>
         </p>
 
-        {viewModel.units.map((unit) => {
-          const baseUnit = state.availableUnits.find(
-            (au) => au._id === unit.baseUnitId,
-          );
-          const selectedUnit = state.selectedUnits.find(
-            (su) => su.id === unit.id,
-          );
-          return (
-            <div key={unit.id}>
-              {baseUnit && selectedUnit && (
-                <UnitRow
-                  baseUnit={baseUnit}
-                  selectedUnit={selectedUnit}
-                  unitViewModel={unit}
-                  dispatch={dispatch}
-                />
-              )}
-            </div>
-          );
-        })}
+        <div className={styles.unitGrid}>
+          {viewModel.units.map((unit) => {
+            return (
+              <UnitRow
+                key={unit.id}
+                state={state}
+                selectedUnitId={unit.id}
+                unitViewModel={unit}
+                dispatch={dispatch}
+              />
+            );
+          })}
+        </div>
       </main>
     </>
   );
