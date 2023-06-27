@@ -34,6 +34,9 @@ export class SanityCmsProvider implements CmsProviderInterface {
     });
   }
 
+  /**
+   * Provides the unit details
+   */
   async getUnitDetails(): Promise<UnitDetail[]> {
     const units = await this.client.fetch(unitDetails);
     return units.map((unit: any): UnitDetail => {
